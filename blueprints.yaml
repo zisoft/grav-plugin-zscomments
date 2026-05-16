@@ -11,7 +11,7 @@ author:
 homepage: https://github.com/zisoft/grav-plugin-zscomments.git
 keywords: guestbook, plugin
 bugs: https://github.com/zisoft/grav-plugin-zscomments.git/issues
-readme: https://github.com/zisoft/grav-plugin-zscomments.git/README.md
+readme: https://github.com/zisoft/grav-plugin-zscomments/blob/develop/README.md
 license: MIT
 
 compatibility:
