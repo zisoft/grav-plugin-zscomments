@@ -1,0 +1,89 @@
+{% if enable_zscomments_plugin %}
+    {% set scope = scope ?: 'data.' %}
+
+    {% do assets.addCss('plugins://zscomments/css/zscomments.css') %}
+
+    <div class="comments-form">
+      <h3>{{'PLUGIN_ZSCOMMENTS.ADD_COMMENT'|t}}</h3>
+
+      <form name="{{ grav.config.plugins.zscomments.form.name }}"
+            action="{{ grav.config.plugins.zscomments.form.action ?  base_url ~ grav.config.plugins.zscomments.form.action : page.url }}"
+            method="{{ grav.config.plugins.zscomments.form.method|upper|default('POST') }}">
+
+          {% for field in grav.config.plugins.zscomments.form.fields %}
+              {% set value = form.value(field.name) %}
+              {% if field.evaluateDefault %}
+                  {% set value = evaluate(field.evaluateDefault) %}
+              {% endif %}
+              <div>
+                  {% include "forms/fields/#{field.type}/#{field.type}.html.twig" %}
+              </div>
+          {% endfor %}
+          {% include "forms/fields/formname/formname.html.twig" %}
+
+          <div class="buttons">
+          {% for button in grav.config.plugins.zscomments.form.buttons %}
+              <button class="button" type="{{ button.type|default('submit') }}">{{ button.value|t|default('Submit') }}</button>
+          {% endfor %}
+          </div>
+
+          {{ nonce_field('form', 'form-nonce')|raw }}
+      </form>
+
+      <div class="alert">{{ form.message }}</div>
+    </div>
+
+    {% if zscomments|length %}
+
+      <div class="comments-list">
+        <h3>{{'PLUGIN_ZSCOMMENTS.COMMENTS'|t}}</h3>
+
+        {% macro process_node(comments, parent_id) %}
+          {% import _self as self %}
+
+          {% set first = true %}
+
+          {% for comment in comments|filter(c => c.is_pending == 0 and c.parent_id == parent_id)|sort((a,b) => b.date <=> a.date) %}
+            {% if first %}
+              <ul>
+            {% endif %}
+
+            <li>
+            <div class="comment-entry">
+              <div class="comment-header">
+                <div class="comment-gravatar">
+                  <img src="https://www.gravatar.com/avatar/{{comment.email|ltrim|rtrim|md5}}?size=40">
+                </div>
+                <div class="comment-author-date">
+                  <div class="comment-author">{{comment.author}}</div>
+                  <div class="comment-date">{{comment.date|e}}</div>
+                </div>
+              </div>
+              <div class="comment-text">
+                {{comment.text}}
+              </div>
+              <div class="comment-reply">
+                <a href="javascript:document.getElementById('zscomment-reply-to').value='{{comment.id}}';document.getElementById('zscomment-name').focus();">
+                  antworten
+                </a>
+              </div>
+            </div>
+            {{ self.process_node(comments, comment.id) }}
+            </li>
+            
+            {% set first = false %}
+          {% endfor %}
+
+          {% if not first %}
+            </ul>
+          {% endif %}
+        {% endmacro process_node %}
+
+        {% from _self import process_node %}
+
+        {{ process_node(zscomments, '') }}
+
+      </div>
+
+    {% endif %}
+{% endif %}

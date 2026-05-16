@@ -1,0 +1,67 @@
+.comments-form {
+  max-width: 30em;
+  margin: 1em 0;
+  border-top: 1px solid #aaa;
+}
+
+.comments-form label span.required {
+  color: red;
+  font-size: 0.8em;
+}
+
+.comments-form input,
+.comments-form textarea {
+  width: 100%;
+  border: 1px solid #aaa;
+  border-radius: 0.2em;
+}
+
+.comments-form textarea {
+  height: 5em;
+}
+
+.comments-form button {
+  padding: 0.4em 1em;
+  border-radius: 0.3em;
+  border: 1px solid #aaa;
+  background-color: #ccc;
+}
+
+.comments-form .alert {
+  color: red;
+}
+
+.comments-list ul {
+  list-style: none;
+}
+
+.comments-list > ul {
+  padding: 0;
+}
+
+.comment-entry {
+  margin-bottom: 1em;
+}
+
+.comment-header {
+  display: flex;
+  font-size: 0.8em;
+  margin-bottom: 0.5em;
+}
+
+.comment-gravatar {
+  margin-right: 0.5em;
+}
+
+.comment-author {
+  font-weight: bold;
+}
+
+.comment-date {
+  font-style: italic;
+}
+
+.comment-reply {
+  font-size: 0.8em;
+}
+

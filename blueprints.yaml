@@ -1,0 +1,36 @@
+name: ZSComments
+type: plugin
+slug: zscomments
+version: 1.0.0
+description: Adds a commenting functionality to your site
+icon: comment
+author:
+  name: Mario Zimmermann
+  email: mail@zisoft.de
+  url: https://zisoft.de
+homepage: https://github.com/zisoft/grav-plugin-zscomments.git
+keywords: guestbook, plugin
+bugs: https://github.com/zisoft/grav-plugin-zscomments.git/issues
+readme: https://github.com/zisoft/grav-plugin-zscomments.git/README.md
+license: MIT
+
+compatibility:
+  grav: ['2.0']
+
+dependencies:
+  - form
+  - email
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: PLUGIN_ADMIN.PLUGIN_STATUS
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
