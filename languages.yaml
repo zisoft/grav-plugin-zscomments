@@ -13,6 +13,7 @@ en:
       EMAIL_NEW_COMMENT_SUBJECT: '[New Comment] from {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Thank you for writing your comment!'
       QUICK_REPLY_LABEL: 'Quick reply'
+      REPLY: Reply
       CONFIG:
         REQUIRE_APPROVAL: 'Require approval'
         ENABLE_ON_ROUTES: 'Enable on routes'
@@ -84,6 +85,7 @@ de:
       EMAIL_NEW_COMMENT_SUBJECT: '[Neuer Kommentar] von {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Vielen Dank, der Kommentar wartet auf Freigabe'
       QUICK_REPLY_LABEL: Schnell-Antwort
+      REPLY: Antworten
       CONFIG:
         REQUIRE_APPROVAL: 'Freigabe erforderlich'
         ENABLE_ON_ROUTES: 'Aktiv auf Routen'
@@ -155,6 +157,7 @@ es:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nuevo comentario] de {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Gracias por escribir su comentario!'
       QUICK_REPLY_LABEL: 'Respuesta rápida'
+      REPLY: Responder
       ADMIN:
         REFRESH: Actualizar
         SUMMARY_LOADED: '%retrieved% de %total% comentarios cargados'
@@ -226,6 +229,7 @@ fr:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nouveau commentaire] de {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: "Merci d'avoir rédigé votre commentaire !"
       QUICK_REPLY_LABEL: 'Réponse rapide'
+      REPLY: Répondre
       ADMIN:
         REFRESH: Actualiser
         SUMMARY_LOADED: '%retrieved% commentaires chargés sur %total%'
@@ -297,6 +301,7 @@ hr:
       EMAIL_NEW_COMMENT_SUBJECT: '[Novi komentar] od {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Hvala Vam što ste napisali svoj komentar!'
       QUICK_REPLY_LABEL: 'Brzi odgovor'
+      REPLY: Odgovori
       ADMIN:
         REFRESH: Osvježi
         SUMMARY_LOADED: 'Učitano %retrieved% od %total% komentara'
@@ -368,6 +373,7 @@ it:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nuovo commento] da {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Grazie per il tuo commento!'
       QUICK_REPLY_LABEL: 'Risposta rapida'
+      REPLY: Rispondi
       ADMIN:
         REFRESH: Aggiorna
         SUMMARY_LOADED: '%retrieved% commenti caricati su %total%'
@@ -439,6 +445,7 @@ ja:
       EMAIL_NEW_COMMENT_SUBJECT: '[新しいコメント] {{ form.value.name|e }}から'
       THANK_YOU_MESSAGE: コメントありがとうございます！
       QUICK_REPLY_LABEL: クイック返信
+      REPLY: 返信
       ADMIN:
         REFRESH: 更新
         SUMMARY_LOADED: '%total% 件中 %retrieved% 件のコメントを読み込みました'
@@ -510,6 +517,7 @@ nl:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nieuwe reactie] van {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Bedankt voor je reactie!'
       QUICK_REPLY_LABEL: 'Snel antwoord'
+      REPLY: Antwoorden
       ADMIN:
         REFRESH: Verversen
         SUMMARY_LOADED: '%retrieved% van %total% reacties geladen'
@@ -581,6 +589,7 @@ pl:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nowy komentarz] od {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Dziękujemy za komentarz!'
       QUICK_REPLY_LABEL: 'Szybka odpowiedź'
+      REPLY: Odpowiedz
       ADMIN:
         REFRESH: Odśwież
         SUMMARY_LOADED: 'Załadowano %retrieved% z %total% komentarzy'
@@ -652,6 +661,7 @@ ru:
       EMAIL_NEW_COMMENT_SUBJECT: '[Новый комментарий] от {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Благодарим за ваш комментарий!'
       QUICK_REPLY_LABEL: 'Быстрый ответ'
+      REPLY: Ответить
       ADMIN:
         REFRESH: Обновить
         SUMMARY_LOADED: 'Загружено %retrieved% из %total% комментариев'
@@ -723,6 +733,7 @@ pt-br:
       EMAIL_NEW_COMMENT_SUBJECT: '[Novo comentário] de {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Obrigada por enviar seu comentário!'
       QUICK_REPLY_LABEL: 'Resposta rápida'
+      REPLY: Responder
       ADMIN:
         REFRESH: Atualizar
         SUMMARY_LOADED: '%retrieved% de %total% comentários carregados'
@@ -794,6 +805,7 @@ ro:
       EMAIL_NEW_COMMENT_SUBJECT: '[Comentariu nou] from {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Vă mulțumim pentru comentariu!'
       QUICK_REPLY_LABEL: 'Răspuns rapid'
+      REPLY: Răspunde
       ADMIN:
         REFRESH: Actualizați
         SUMMARY_LOADED: '%retrieved% din %total% comentarii încărcate'
@@ -865,6 +877,7 @@ ro:
       EMAIL_NEW_COMMENT_SUBJECT: '[Ny kommentar] fra {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Takk for din kommentar!'
       QUICK_REPLY_LABEL: Hurtigsvar
+      REPLY: Svar
       ADMIN:
         REFRESH: Oppdater
         SUMMARY_LOADED: '%retrieved% av %total% kommentarer lastet'

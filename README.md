@@ -209,22 +209,6 @@ To enable it:
 3. uncomment the captcha process block
 4. add your own reCAPTCHA site key and secret
 
-## Screenshots
-
-No screenshots are bundled with the plugin yet, but the most useful ones for the project page would be:
-
-- frontend comment form and threaded comment list
-- admin2 moderation page
-- admin2 plugin configuration page
-
-If you want, you can later add screenshots under a folder like:
-
-```text
-plugins/zscomments/docs/screenshots/
-```
-
-and reference them from this README.
-
 ## Known limitations
 
 - The plugin is designed for **Grav 2** and **admin2** workflows; classic Grav Admin integration is not included.
