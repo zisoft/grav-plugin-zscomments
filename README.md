@@ -1,77 +1,252 @@
 # Grav ZSComments Plugin
 
-The **ZSComments Plugin** for [Grav](http://github.com/getgrav/grav) adds the ability to add comments to pages, and moderate them.
+[![Grav](https://img.shields.io/badge/Grav-2.x-221E1F?logo=grav&logoColor=white)](https://getgrav.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Admin](https://img.shields.io/badge/Admin-admin2-6f42c1)](https://github.com/getgrav/grav-plugin-admin2)
 
-This plugin is mainly based on the original [Grav Comments Plugin](https://github.com/getgrav/grav-plugin-comments), which is declared deprecated and no longer developed.
+**ZSComments** is a comments plugin for **Grav 2**.
 
-I have changed the original plugin to fit my needs:
+It started as a fork of the original Grav Comments plugin, but has been adapted for modern Grav 2 projects with **admin2 moderation**, **YAML-based storage**, **threaded replies**, and **safer file locking for shared hosting**.
 
-- Option to require approval of new comments
-- Reply to existing comments, resulting in a _tree view_ of comment threads
+## Highlights
+
+- add comments to Grav pages from the frontend
+- threaded comment replies
+- optional moderation / approval workflow
+- admin2 moderation UI
+- quick reply while approving a comment
+- moderation email notifications with approve/delete actions
+- configurable frontend comment order (`asc` / `desc`)
+- route-based enable / disable rules
 - Gravatar support
-- Maintain comments in Grav's admin2 panel
+- YAML storage in `user/data/zscomments`
+- lock-directory based concurrent file access without relying on `flock()`
+- optional reCAPTCHA integration via Grav Form
 
-**This plugin is for Grav 2 only**
+## Requirements
 
+- Grav `2.x`
+- [Form plugin](https://github.com/getgrav/grav-plugin-form)
+- [Email plugin](https://github.com/getgrav/grav-plugin-email)
+- [admin2 plugin](https://github.com/getgrav/grav-plugin-admin2) recommended for configuration and moderation
 
-# Installation
+## Installation
 
-The ZSComments plugin is easy to install with GPM.
+Install with GPM:
 
+```bash
+bin/gpm install zscomments
 ```
-$ bin/gpm install zscomments
+
+Or clone / copy this plugin into:
+
+```text
+user/plugins/zscomments
 ```
 
-Or clone from GitHub and put in the `user/plugins/zscomments` folder.
+## Quick start
 
-# Usage
+1. Install and enable the plugin.
+2. Configure it in **admin2** or in `user/config/plugins/zscomments.yaml`.
+3. Add the comments partial to the page template where comments should appear.
+4. Make sure the **Email plugin** is configured correctly if you want moderation emails.
 
-Add `{% include 'partials/zscomments.html.twig' with {'page': page} %}` to the template file where you want to add comments.
-
-For example, in Antimatter, in `templates/item.html.twig`:
+Add the partial to a Twig template:
 
 ```twig
-{% embed 'partials/base.html.twig' %}
-
-    {% block content %}
-        {% if config.plugins.breadcrumbs.enabled %}
-            {% include 'partials/breadcrumbs.html.twig' %}
-        {% endif %}
-
-        <div class="blog-content-item grid pure-g-r">
-            <div id="item" class="block pure-u-2-3">
-                {% include 'partials/blog_item.html.twig' with {'blog':page.parent, 'truncate':false} %}
-            </div>
-            <div id="sidebar" class="block size-1-3 pure-u-1-3">
-                {% include 'partials/sidebar.html.twig' with {'blog':page.parent} %}
-            </div>
-        </div>
-
-        {% include 'partials/zscomments.html.twig' with {'page': page} %}
-    {% endblock %}
-
-{% endembed %}
+{% include 'partials/zscomments.html.twig' with { page: page } %}
 ```
 
-The comment form will appear on the blog post items matching the enabled routes.
+Example inside a blog item template:
 
-To set the enabled routes, create a `user/config/plugins/zscomments.yaml` file, copy in it the contents of `user/plugins/zscomments/zscomments.yaml` and edit the `enable_on_routes` and `disable_on_routes` options according to your needs.
+```twig
+{% block content %}
+    {% include 'partials/blog_item.html.twig' with { blog: page.parent, truncate: false } %}
+    {% include 'partials/zscomments.html.twig' with { page: page } %}
+{% endblock %}
+```
 
-> Make sure you configured the "Email from" and "Email to" email addresses in the Email plugin with your email address!
+## Configuration
 
-# Enabling Recaptcha
+You can configure ZSComments either:
 
-The plugin comes with Recaptcha integration. To make it work, create a `user/config/plugins/zscomments.yaml` file, copy in it the contents of `user/plugins/zscomments/zscomments.yaml` and uncomment the captcha form field and the captcha validation process.
-Make sure you add your own Recaptcha `site` and `secret` keys too.
+- in **admin2**
+- or in `user/config/plugins/zscomments.yaml`
 
-# Where are the zscomments stored?
+### Main options
 
-In the `user/data/zscomments` folder. They're organized by page route, so every page with a comment has a corresponding file. This enables a quick load of all the page zscomments.
+| Option | Default | Description |
+|---|---:|---|
+| `enabled` | `true` | Enables the plugin. |
+| `require_approval` | `true` | New comments are stored as pending until approved. |
+| `approval_email` | `mail@example.com` | Recipient for moderation emails. |
+| `approval_from` | `Grav CMS <noreply@example.com>` | Sender used for moderation emails. Use a valid sender address for your mail setup. |
+| `approval_subject` | `New comment` | Subject line for moderation emails. |
+| `quickreply_name` | `Your name` | Author name used for quick replies created during approval. |
+| `quickreply_email` | `mail@example.com` | Email used for quick replies created during approval. |
+| `comment_order` | `desc` | Frontend output order for approved comments: `asc` or `desc`. |
+| `enable_on_routes` | `['/']` | Route prefixes where the plugin should be active. |
+| `disable_on_routes` | `[]` | Exact routes where the plugin should stay disabled even if matched by `enable_on_routes`. |
+| `lock_timeout` | `5` | Maximum wait time in seconds for a comment file lock. |
+| `lock_retry_delay` | `100000` | Delay between lock retries in microseconds. |
+| `lock_stale_timeout` | `30` | Removes stale lock directories after this many seconds. |
 
-# Visualize zscomments
+### Example configuration
 
-When the plugin is installed and enabled, the `ZSComments` menu will appear in the Admin Plugin. From there you can see all the zscomments made. You can filter this list in various ways.
+```yaml
+enabled: true
+require_approval: true
+comment_order: desc
+approval_email: mail@example.com
+approval_from: 'My Site <noreply@example.com>'
+approval_subject: 'New comment waiting for approval'
 
-# Email notifications
+enable_on_routes:
+  - /blog
+  - /news
 
-The plugin interacts with the Email plugin to send emails upon receiving a comment. Configure the Email plugin correctly, setting its "Email from" and "Email to" email addresses.
+disable_on_routes:
+  - /blog/archive
+```
+
+### Route matching behavior
+
+- `enable_on_routes` works as a route prefix list
+- `disable_on_routes` is checked as an exact route list
+
+So this is a common setup:
+
+```yaml
+enable_on_routes:
+  - /
+```
+
+That enables comments everywhere unless a route is explicitly disabled.
+
+## Admin2 moderation
+
+When **admin2** is installed, ZSComments adds its own plugin page in the admin interface.
+
+From there you can:
+
+- review recent comments
+- filter by:
+  - pending only
+  - time range
+  - route
+  - text search
+- approve comments
+- delete comments
+- add an optional quick reply during approval
+- see recently commented pages
+
+## Email notifications
+
+When a comment is submitted, ZSComments can send a moderation email using the **Email plugin**.
+
+Important:
+
+- the **Email plugin** provides the actual mail transport
+- ZSComments provides the moderation-specific recipient, sender, and subject
+- moderation mails contain approve/delete actions
+- an optional quick reply can be added while approving
+
+Relevant ZSComments settings:
+
+- `approval_email`
+- `approval_from`
+- `approval_subject`
+
+## Comment storage
+
+Comments are stored as YAML files in:
+
+```text
+user/data/zscomments
+```
+
+On multilingual sites, comments are stored per language as well.
+
+Examples:
+
+```text
+user/data/zscomments/de/blog/my-post.yaml
+user/data/zscomments/en/blog/my-post.yaml
+```
+
+Benefits of this approach:
+
+- no database required
+- simple backups
+- easy manual inspection
+- one comment file per page route
+
+## Frontend behavior
+
+The frontend output is rendered by:
+
+```text
+plugins/zscomments/templates/partials/zscomments.html.twig
+```
+
+Public output currently behaves like this:
+
+- only approved comments are shown
+- comments can be shown oldest-first or newest-first
+- replies are rendered as a nested thread
+- name and date fields are always visible
+- comment sender email is never puplished
+- avatars are rendered via Gravatar if available
+
+## reCAPTCHA
+
+The default plugin configuration includes a commented example for reCAPTCHA integration.
+
+To enable it:
+
+1. copy or edit `user/config/plugins/zscomments.yaml`
+2. uncomment the captcha field in the form definition
+3. uncomment the captcha process block
+4. add your own reCAPTCHA site key and secret
+
+## Known limitations
+
+- The plugin is designed for **Grav 2** and **admin2** workflows; classic Grav Admin integration is not included.
+- `disable_on_routes` is matched as an exact route list, while `enable_on_routes` works by prefix.
+- Public frontend output only shows approved comments.
+- There is no database backend; comments are stored in YAML files per route.
+- Moderation by email is intended for trusted recipients because approval and delete actions are triggered from moderation links/forms.
+
+## Migration from the original `comments` plugin
+
+ZSComments was renamed deliberately to avoid conflicts with the original Grav plugin.
+
+If you are migrating from `comments`, check these points:
+
+- plugin folder changed from `user/plugins/comments` to `user/plugins/zscomments`
+- config file changed from `user/config/plugins/comments.yaml` to `user/config/plugins/zscomments.yaml`
+- Twig partial changed from `partials/comments.html.twig` to `partials/zscomments.html.twig`
+- comment storage changed from `user/data/comments` to `user/data/zscomments`
+- admin integration is now focused on **admin2**
+
+Template include update:
+
+```twig
+{# old #}
+{% include 'partials/comments.html.twig' with { page: page } %}
+
+{# new #}
+{% include 'partials/zscomments.html.twig' with { page: page } %}
+```
+
+If you already have legacy comment data, move or convert it into the `user/data/zscomments` structure before removing the old plugin.
+
+## Notes
+
+- The plugin is intentionally named **`zscomments`** to avoid conflicts with the original Grav `comments` plugin.
+- It is designed for **Grav 2** and **admin2** workflows.
+- File locking is implemented with lock directories for better compatibility with shared hosting environments where `flock()` can be unreliable.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

@@ -3,7 +3,7 @@ type: plugin
 slug: zscomments
 version: 1.0.0
 description: Adds a commenting functionality to your site
-icon: comment
+icon: comments
 author:
   name: Mario Zimmermann
   email: mail@zisoft.de
@@ -34,3 +34,78 @@ form:
         0: PLUGIN_ADMIN.DISABLED
       validate:
         type: bool
+
+    require_approval:
+      type: toggle
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.REQUIRE_APPROVAL
+      highlight: 1
+      default: 0
+      options:
+        1: ICU.PLUGIN_ADMIN.ENABLED
+        0: ICU.PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
+    enable_on_routes:
+      type: array
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.ENABLE_ON_ROUTES
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.ENABLE_ON_ROUTES_HELP
+      value_only: true
+
+    disable_on_routes:
+      type: array
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.DISABLE_ON_ROUTES
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.DISABLE_ON_ROUTES_HELP
+      value_only: true
+
+    approval_email:
+      type: email
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.APPROVAL_EMAIL
+
+    approval_from:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.APPROVAL_FROM
+
+    approval_subject:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.APPROVAL_SUBJECT
+
+    quickreply_name:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.QUICKREPLY_NAME
+
+    quickreply_email:
+      type: email
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.QUICKREPLY_EMAIL
+
+    comment_order:
+      type: select
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.COMMENT_ORDER
+      default: desc
+      options:
+        asc: ICU.PLUGIN_ZSCOMMENTS.CONFIG.COMMENT_ORDER_ASC
+        desc: ICU.PLUGIN_ZSCOMMENTS.CONFIG.COMMENT_ORDER_DESC
+      validate:
+        type: text
+
+    lock_timeout:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.LOCK_TIMEOUT
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.TIMEOUT_HELP
+      validate:
+        type: number
+
+    lock_retry_delay:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.LOCK_RETRY_DELAY
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.RETRY_DELAY_HELP
+      validate:
+        type: int
+
+    lock_stale_timeout:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.LOCK_STALE_TIMEOUT
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.STALE_TIMEOUT_HELP
+      validate:
+        type: number
+

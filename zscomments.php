@@ -3,7 +3,6 @@ namespace Grav\Plugin;
 
 use Composer\Autoload\ClassLoader;
 use Grav\Common\Filesystem\Folder;
-use Grav\Common\Page\Page;
 use Grav\Common\Plugin;
 use Grav\Common\Filesystem\RecursiveFolderFilterIterator;
 use Grav\Common\Utils;
@@ -28,30 +27,6 @@ class ZscommentsPlugin extends Plugin
       'onApiSidebarItems' => ['onApiSidebarItems', 0],
       'onApiPluginPageInfo' => ['onApiPluginPageInfo', 0],
     ];
-  }
-
-  /**
-     * Initialize form if the page has one. Also catches form processing if user posts the form.
-     *
-     * Used by Form plugin < 2.0, kept for backwards compatibility
-     *
-     * @deprecated
-     */
-  public function onPageInitialized()
-  {
-    /** @var Page $page */
-    $page = $this->grav['page'];
-    if (!$page) {
-      return;
-    }
-
-    if ($this->enable) {
-      $header = $page->header();
-      if (!isset($header->form)) {
-        $header->form = $this->grav['config']->get('plugins.zscomments.form');
-        $page->header($header);
-      }
-    }
   }
 
   public function onPagesInitialized()
@@ -101,17 +76,11 @@ class ZscommentsPlugin extends Plugin
   }
 
   public function onTwigSiteVariables() {
-    // Old way
     $enabled = $this->enable;
     $zscomments = $this->fetchZscomments();
 
-    $this->grav['twig']->enable_zscomments_plugin = $enabled;
-    $this->grav['twig']->zscomments = $zscomments;
-
-    // New way
     $this->grav['twig']->twig_vars['enable_zscomments_plugin'] = $enabled;
     $this->grav['twig']->twig_vars['zscomments'] = $zscomments;
-
   }
 
   /*
@@ -129,7 +98,6 @@ class ZscommentsPlugin extends Plugin
       $this->enable([
         'onFormProcessed' => ['onFormProcessed', 0],
         'onFormPageHeaderProcessed' => ['onFormPageHeaderProcessed', 0],
-        'onPageInitialized' => ['onPageInitialized', 10],
         'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
       ]);
     }
@@ -176,7 +144,7 @@ class ZscommentsPlugin extends Plugin
     $items[] = [
       'id' => $this->route,
       'plugin' => 'zscomments',
-      'label' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.PLUGIN_TITLE', 'ZSComments'),
+      'label' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.PLUGIN_TITLE', 'ZSComments'),
       'icon' => 'fa-comments',
       'route' => '/plugin/zscomments',
       'priority' => 80,
@@ -201,13 +169,13 @@ class ZscommentsPlugin extends Plugin
     $event['definition'] = [
       'id' => $this->route,
       'plugin' => 'zscomments',
-      'title' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.PLUGIN_TITLE', 'ZSComments'),
+      'title' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.PLUGIN_TITLE', 'ZSComments'),
       'icon' => 'fa-comments',
       'page_type' => 'component',
       'actions' => [
         [
           'id' => 'refresh',
-          'label' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.REFRESH', 'Refresh'),
+          'label' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.REFRESH', 'Refresh'),
           'icon' => 'fa-rotate-right',
         ],
       ],
@@ -263,28 +231,6 @@ class ZscommentsPlugin extends Plugin
   private function getCurrentCommentDate()
   {
     return (new \DateTime('now', $this->getCommentTimezone()))->format('Y-m-d H:i');
-  }
-
-  private function getCommentTimestamp($date)
-  {
-    $formats = [
-      'Y-m-d H:i',
-      'D, d M Y H:i:s',
-      \DateTimeInterface::RFC2822,
-      \DateTimeInterface::ATOM,
-    ];
-
-    foreach ($formats as $format) {
-      $dateTime = \DateTime::createFromFormat($format, (string) $date, $this->getCommentTimezone());
-
-      if ($dateTime instanceof \DateTimeInterface) {
-        return $dateTime->getTimestamp();
-      }
-    }
-
-    $timestamp = strtotime((string) $date);
-
-    return $timestamp !== false ? $timestamp : 0;
   }
 
   private function getCommentFileMetadata($filepath)
@@ -411,41 +357,41 @@ class ZscommentsPlugin extends Plugin
         'search' => $normalizedFilters['search'],
       ],
       'labels' => [
-        'plugin_title' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.PLUGIN_TITLE', 'ZSComments'),
-        'summary_loaded' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.SUMMARY_LOADED', '%retrieved% von %total% Kommentaren geladen'),
-        'refresh' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.REFRESH', 'Refresh'),
-        'comments_title' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COMMENTS_TITLE', 'Recent comments'),
-        'loading_comments' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.LOADING_COMMENTS', 'Loading comments …'),
-        'no_comments' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.NO_COMMENTS', 'No comments found.'),
-        'author_unknown' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.AUTHOR_UNKNOWN', 'Unknown'),
-        'status_pending' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.STATUS_PENDING', 'Pending'),
-        'status_approved' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.STATUS_APPROVED', 'Approved'),
-        'approve' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.APPROVE', 'Approve'),
-        'approve_running' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.APPROVE_RUNNING', 'Approving …'),
-        'delete' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.DELETE', 'Delete'),
-        'delete_running' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.DELETE_RUNNING', 'Deleting …'),
-        'quickreply_placeholder' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.QUICKREPLY_PLACEHOLDER', 'Optional quick reply for approval'),
-        'load_more' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.LOAD_MORE', 'Load more'),
-        'pages_title' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.PAGES_TITLE', 'Recently commented pages'),
-        'no_pages' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.NO_PAGES', 'No commented pages yet.'),
-        'column_author' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_AUTHOR', 'Author'),
-        'column_page' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_PAGE', 'Page'),
-        'column_date' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_DATE', 'Date'),
-        'column_status' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_STATUS', 'Status'),
-        'column_actions' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_ACTIONS', 'Actions'),
-        'column_route' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_ROUTE', 'Route'),
-        'column_comments' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_COMMENTS', 'Comments'),
-        'column_last_comment' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_LAST_COMMENT', 'Last comment'),
-        'filter_range' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE', 'Time range'),
-        'filter_range_7d' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE_7D', 'last 7 days'),
-        'filter_range_30d' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE_30D', 'last 30 days'),
-        'filter_range_all' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE_ALL', 'all'),
-        'filter_pending_only' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_PENDING_ONLY', 'only pending'),
-        'filter_route' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_ROUTE', 'Route'),
-        'filter_route_placeholder' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_ROUTE_PLACEHOLDER', 'e.g. /site/about'),
-        'filter_search' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_SEARCH', 'Text search'),
-        'filter_search_placeholder' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.FILTER_SEARCH_PLACEHOLDER', 'Search comment text'),
-        'confirm_delete' => $this->translateAdminLabel('PLUGIN_ZSCOMMENTS.ADMIN.CONFIRM_DELETE', 'Do you really want to delete this comment?'),
+        'plugin_title' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.PLUGIN_TITLE', 'ZSComments'),
+        'summary_loaded' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.SUMMARY_LOADED', '%retrieved% von %total% Kommentaren geladen'),
+        'refresh' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.REFRESH', 'Refresh'),
+        'comments_title' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COMMENTS_TITLE', 'Recent comments'),
+        'loading_comments' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.LOADING_COMMENTS', 'Loading comments …'),
+        'no_comments' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.NO_COMMENTS', 'No comments found.'),
+        'author_unknown' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.AUTHOR_UNKNOWN', 'Unknown'),
+        'status_pending' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.STATUS_PENDING', 'Pending'),
+        'status_approved' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.STATUS_APPROVED', 'Approved'),
+        'approve' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.APPROVE', 'Approve'),
+        'approve_running' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.APPROVE_RUNNING', 'Approving …'),
+        'delete' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.DELETE', 'Delete'),
+        'delete_running' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.DELETE_RUNNING', 'Deleting …'),
+        'quickreply_placeholder' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.QUICKREPLY_PLACEHOLDER', 'Optional quick reply for approval'),
+        'load_more' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.LOAD_MORE', 'Load more'),
+        'pages_title' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.PAGES_TITLE', 'Recently commented pages'),
+        'no_pages' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.NO_PAGES', 'No commented pages yet.'),
+        'column_author' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_AUTHOR', 'Author'),
+        'column_page' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_PAGE', 'Page'),
+        'column_date' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_DATE', 'Date'),
+        'column_status' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_STATUS', 'Status'),
+        'column_actions' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_ACTIONS', 'Actions'),
+        'column_route' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_ROUTE', 'Route'),
+        'column_comments' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_COMMENTS', 'Comments'),
+        'column_last_comment' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.COLUMN_LAST_COMMENT', 'Last comment'),
+        'filter_range' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE', 'Time range'),
+        'filter_range_7d' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE_7D', 'last 7 days'),
+        'filter_range_30d' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE_30D', 'last 30 days'),
+        'filter_range_all' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_RANGE_ALL', 'all'),
+        'filter_pending_only' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_PENDING_ONLY', 'only pending'),
+        'filter_route' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_ROUTE', 'Route'),
+        'filter_route_placeholder' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_ROUTE_PLACEHOLDER', 'e.g. /site/about'),
+        'filter_search' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_SEARCH', 'Text search'),
+        'filter_search_placeholder' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.FILTER_SEARCH_PLACEHOLDER', 'Search comment text'),
+        'confirm_delete' => $this->translateAdminLabel('ICU.PLUGIN_ZSCOMMENTS.ADMIN.CONFIRM_DELETE', 'Do you really want to delete this comment?'),
       ],
     ];
   }
@@ -570,12 +516,13 @@ class ZscommentsPlugin extends Plugin
           'comment' => $comment
         ];
 
-        $to = 'mail@zisoft.de';
-        $subject = 'Neuer Kommentar auf zisoft.de';
+        $to = trim((string) $this->config->get('plugins.zscomments.approval_email', 'mail@zisoft.de'));
+        $from = trim((string) $this->config->get('plugins.zscomments.approval_from', 'zisoft Grav CMS <norply@zisoft.de>'));
+        $subject = trim((string) $this->config->get('plugins.zscomments.approval_subject', 'Neuer Kommentar auf zisoft.de'));
         $content = $this->grav['twig']->processTemplate('/partials/zscomment_email.html.twig', $vars);
 
         $message = $this->grav['Email']->message($subject, $content, 'text/html')
-          ->setFrom("zisoft Grav CMS <norply@zisoft.de>")
+          ->setFrom($from)
           ->setTo($to);
 
         $sent = $this->grav['Email']->send($message);
@@ -858,9 +805,11 @@ class ZscommentsPlugin extends Plugin
 
       for ($i = 0; $i < count($data['comments']); $i++) {
         $comment = $data['comments'][$i];
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i', (string) ($comment['date'] ?? ''), $this->getCommentTimezone());
+
         $comment['pageTitle'] = $data['title'] ?? $file->route;
         $comment['filePath'] = $file->filePath;
-        $comment['timestamp'] = $this->getCommentTimestamp($comment['date'] ?? '');
+        $comment['timestamp'] = $dateTime instanceof \DateTimeInterface ? $dateTime->getTimestamp() : 0;
         $comment['url'] = $file->route;
         $comment['lang'] = $file->lang;
 
@@ -922,7 +871,9 @@ class ZscommentsPlugin extends Plugin
       $matchingComments = [];
 
       foreach ((array) ($file->data['comments'] ?? []) as $comment) {
-        $comment['timestamp'] = $this->getCommentTimestamp($comment['date'] ?? '');
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i', (string) ($comment['date'] ?? ''), $this->getCommentTimezone());
+
+        $comment['timestamp'] = $dateTime instanceof \DateTimeInterface ? $dateTime->getTimestamp() : 0;
         $comment['url'] = $file->route;
         $comment['pageTitle'] = $file->data['title'] ?? $file->route;
         $comment['lang'] = $file->lang;
