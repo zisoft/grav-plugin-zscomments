@@ -3,9 +3,12 @@ enabled: true
 require_approval: true
 
 approval_email: mail@example.com
+approval_from: 'My Site <noreply@example.com>'
+approval_subject: 'New comment waiting for approval'
 
 quickreply_email: mail@example.com
 quickreply_name: Your name
+comment_order: desc
 
 lock_timeout: 5
 lock_retry_delay: 100000
@@ -17,30 +20,29 @@ enable_on_routes:
 disable_on_routes:
   # - /blog/blog-post-to-ignore
   # - /ignore-this-route
-  #- '/blog/daring-fireball-link'
+  # - /blog/daring-fireball-link
 
 form:
     name: zscomments
     fields:
         - name: name
           id: zscomment-name
-          label: PLUGIN_ZSCOMMENTS.NAME_LABEL
-          placeholder: PLUGIN_ZSCOMMENTS.NAME_PLACEHOLDER
-          autocomplete: on
+          label: ICU.PLUGIN_ZSCOMMENTS.NAME_LABEL
+          placeholder: ICU.PLUGIN_ZSCOMMENTS.NAME_PLACEHOLDER
           type: text
           validate:
             required: true
 
         - name: email
-          label: PLUGIN_ZSCOMMENTS.EMAIL_LABEL
-          placeholder: PLUGIN_ZSCOMMENTS.EMAIL_PLACEHOLDER
+          label: ICU.PLUGIN_ZSCOMMENTS.EMAIL_LABEL
+          placeholder: ICU.PLUGIN_ZSCOMMENTS.EMAIL_PLACEHOLDER
           type: email
           validate:
             required: true
 
         - name: text
-          label: PLUGIN_ZSCOMMENTS.MESSAGE_LABEL
-          placeholder: PLUGIN_ZSCOMMENTS.MESSAGE_PLACEHOLDER
+          label: ICU.PLUGIN_ZSCOMMENTS.MESSAGE_LABEL
+          placeholder: ICU.PLUGIN_ZSCOMMENTS.MESSAGE_PLACEHOLDER
           type: textarea
           validate:
             required: true
@@ -78,16 +80,13 @@ form:
 
     buttons:
         - type: submit
-          value: PLUGIN_ZSCOMMENTS.SUBMIT_COMMENT_BUTTON_TEXT
+          value: ICU.PLUGIN_ZSCOMMENTS.SUBMIT_COMMENT_BUTTON_TEXT
 
     process:
 #        - captcha:
 #            recaptcha_secret: ej32oiej23oiej32oijeoi32jeio32je
-        - email:
-            subject: PLUGIN_ZSCOMMENTS.EMAIL_NEW_COMMENT_SUBJECT
-            body: "{% include 'forms/data.html.twig' %}"
         - addComment:
-        - message: PLUGIN_ZSCOMMENTS.THANK_YOU_MESSAGE
+        - message: ICU.PLUGIN_ZSCOMMENTS.THANK_YOU_MESSAGE
         - reset: true
 
 
