@@ -1,3 +1,8 @@
+# v1.1.1
+## 05/22/2026
+1. [](#improved)
+    * **Updated version handling**
+
 # v1.1.0
 ## 05/17/2026
 1. [](#new)
