@@ -68,7 +68,7 @@ class ZscommentsPlugin extends Plugin
 
     if ($this->enable) {
       if (!isset($header->form)) {
-        $header->form = $this->grav['config']->get('plugins.zscomments.form');
+        $header->form = $this->getZscommentsFormConfig();
       }
     }
 
@@ -81,6 +81,27 @@ class ZscommentsPlugin extends Plugin
 
     $this->grav['twig']->twig_vars['enable_zscomments_plugin'] = $enabled;
     $this->grav['twig']->twig_vars['zscomments'] = $zscomments;
+    $this->grav['twig']->twig_vars['zscomments_form_config'] = $this->getZscommentsFormConfig();
+  }
+
+  private function getZscommentsFormConfig()
+  {
+    $defaults = [];
+    $defaultConfigFile = __DIR__ . '/zscomments.yaml';
+
+    if (is_file($defaultConfigFile)) {
+      try {
+        $defaultConfig = Yaml::parseFile($defaultConfigFile);
+        $defaults = is_array($defaultConfig['form'] ?? null) ? $defaultConfig['form'] : [];
+      } catch (\Throwable $e) {
+        $defaults = [];
+      }
+    }
+
+    $configured = $this->config->get('plugins.zscomments.form');
+    $configured = is_array($configured) ? $configured : [];
+
+    return array_replace($defaults, $configured);
   }
 
   /*

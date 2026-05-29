@@ -1,3 +1,8 @@
+# v1.1.2
+## 05/29/2026
+1. [](#bugfix)
+    * **Preserve default form buttons when saving plugin config in admin2.** Saving `user/config/plugins/zscomments.yaml` from admin2 can write only the overridden `form` subtree, which drops `form.buttons` from the effective config and made the frontend submit button disappear. The plugin now merges the default form definition from `plugins/zscomments/zscomments.yaml` with the saved config at runtime, and the Twig partial includes a submit-button fallback if no buttons are configured.
+
 # v1.1.1
 ## 05/22/2026
 1. [](#improved)

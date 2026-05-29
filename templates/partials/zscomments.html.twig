@@ -1,16 +1,17 @@
 {% if enable_zscomments_plugin %}
     {% set scope = scope ?: 'data.' %}
+    {% set zscomments_form = zscomments_form_config ?? grav.config.plugins.zscomments.form %}
 
     {% do assets.addCss('plugins://zscomments/css/zscomments.css') %}
 
     <div class="comments-form">
       <h3>{{'ICU.PLUGIN_ZSCOMMENTS.ADD_COMMENT'|t}}</h3>
 
-      <form name="{{ grav.config.plugins.zscomments.form.name }}"
-            action="{{ grav.config.plugins.zscomments.form.action ?  base_url ~ grav.config.plugins.zscomments.form.action : page.url }}"
-            method="{{ grav.config.plugins.zscomments.form.method|upper|default('POST') }}">
+      <form name="{{ zscomments_form.name }}"
+            action="{{ zscomments_form.action ?  base_url ~ zscomments_form.action : page.url }}"
+            method="{{ zscomments_form.method|upper|default('POST') }}">
 
-          {% for field in grav.config.plugins.zscomments.form.fields %}
+          {% for field in zscomments_form.fields %}
               {% set value = form.value(field.name) %}
               {% if field.evaluateDefault %}
                   {% set value = evaluate(field.evaluateDefault) %}
@@ -21,8 +22,11 @@
           {% endfor %}
           {% include "forms/fields/formname/formname.html.twig" %}
 
+          {% set zscomment_buttons = zscomments_form.buttons is not empty
+            ? zscomments_form.buttons
+            : [{ type: 'submit', value: 'ICU.PLUGIN_ZSCOMMENTS.SUBMIT_COMMENT_BUTTON_TEXT' }] %}
           <div class="buttons">
-          {% for button in grav.config.plugins.zscomments.form.buttons %}
+          {% for button in zscomment_buttons %}
               <button class="button" type="{{ button.type|default('submit') }}">{{ button.value|t|default('Submit') }}</button>
           {% endfor %}
           </div>
