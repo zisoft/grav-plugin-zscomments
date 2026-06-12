@@ -1,3 +1,8 @@
+# v1.1.3
+## 06/12/2026
+1. [](#bugfix)
+    * **Normalize comment storage routes to avoid trailing-slash path issues.** Comment submissions on routes like `/holzwerken/projekte/couchtisch/` could be stored in a wrong location such as `user/data/zscomments/.../couchtisch/.yaml`, which created a stray directory and made comments appear unsaved. Routes are now normalized consistently for writes, reads, and cache keys so `/foo` and `/foo/` resolve to the same comment file.
+
 # v1.1.2
 ## 05/29/2026
 1. [](#bugfix)

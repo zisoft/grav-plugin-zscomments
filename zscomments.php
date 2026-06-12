@@ -210,10 +210,30 @@ class ZscommentsPlugin extends Plugin
     return $translated !== $key ? $translated : $fallback;
   }
 
+  private function normalizeCommentRoute($path)
+  {
+    $path = trim((string) $path);
+
+    if ($path === '') {
+      return '/';
+    }
+
+    $parsedPath = parse_url($path, PHP_URL_PATH);
+    if (is_string($parsedPath) && $parsedPath !== '') {
+      $path = $parsedPath;
+    }
+
+    $path = str_replace('\\', '/', $path);
+    $path = '/' . ltrim($path, '/');
+    $path = rtrim($path, '/');
+
+    return $path !== '' ? $path : '/';
+  }
+
   private function getZscommentsCacheId($path = null, $lang = null)
   {
     $cache = $this->grav['cache'];
-    $path = $path !== null ? $path : $this->grav['uri']->path();
+    $path = $this->normalizeCommentRoute($path !== null ? $path : $this->grav['uri']->path());
     $lang = $lang !== null ? $lang : $this->grav['language']->getLanguage();
 
     return md5('zscomments-data' . $cache->getKey() . '-' . ($lang ?: '') . '-' . $path);
@@ -227,10 +247,11 @@ class ZscommentsPlugin extends Plugin
   private function getZscommentsFilename($path, $lang = null)
   {
     $lang = $lang !== null ? $lang : $this->grav['language']->getLanguage();
+    $path = $this->normalizeCommentRoute($path);
 
     $filename = DATA_DIR . 'zscomments';
     $filename .= ($lang ? '/' . $lang : '');
-    $filename .= $path . '.yaml';
+    $filename .= $path === '/' ? '/.yaml' : $path . '.yaml';
 
     return $filename;
   }
@@ -467,7 +488,7 @@ class ZscommentsPlugin extends Plugin
       case 'addComment':
         $post = isset($_POST['data']) ? $_POST['data'] : [];
 
-        $path = $this->grav['uri']->path();
+        $path = $this->normalizeCommentRoute((string) ($post['path'] ?? $this->grav['uri']->path()));
 
         $lang = filter_var(urldecode((string) $post['lang']), FILTER_SANITIZE_STRING);
         $text = filter_var(urldecode((string) $post['text']), FILTER_SANITIZE_STRING);
@@ -868,10 +889,9 @@ class ZscommentsPlugin extends Plugin
     }
 
     $lang = $this->grav['language']->getLanguage();
-    $filename = $lang ? '/' . $lang : '';
-    $filename .= $this->grav['uri']->path() . '.yaml';
+    $filename = $this->getZscommentsFilename($this->grav['uri']->path(), $lang);
 
-    $data = $this->getDataFromFilename($filename);
+    $data = $this->readYamlFileWithLock($filename);
     $zscomments = isset($data['comments']) ? $data['comments'] : null;
     //save to cache if enabled
     $cache->save($this->zscomments_cache_id, $zscomments);
