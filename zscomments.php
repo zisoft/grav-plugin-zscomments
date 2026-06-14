@@ -5,6 +5,7 @@ use Composer\Autoload\ClassLoader;
 use Grav\Common\Filesystem\Folder;
 use Grav\Common\Plugin;
 use Grav\Common\Filesystem\RecursiveFolderFilterIterator;
+use Grav\Common\Page\Interfaces\PageInterface;
 use Grav\Common\Utils;
 use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Yaml\Yaml;
@@ -117,6 +118,7 @@ class ZscommentsPlugin extends Plugin
 
     if ($this->enable) {
       $this->enable([
+        'onPageInitialized' => ['onPageInitialized', 100],
         'onFormProcessed' => ['onFormProcessed', 0],
         'onFormPageHeaderProcessed' => ['onFormPageHeaderProcessed', 0],
         'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
@@ -133,6 +135,19 @@ class ZscommentsPlugin extends Plugin
   {
     $this->grav['zscomments_plugin'] = $this;
     $this->initializeFrontend();
+  }
+
+  public function onPageInitialized(): void
+  {
+    if (!$this->enable) {
+      return;
+    }
+
+    $page = $this->grav['page'] ?? null;
+
+    if ($page instanceof PageInterface) {
+      $this->registerZscommentsFormOnPage($page);
+    }
   }
 
   public function autoload(): ClassLoader
@@ -228,6 +243,20 @@ class ZscommentsPlugin extends Plugin
     $path = rtrim($path, '/');
 
     return $path !== '' ? $path : '/';
+  }
+
+  private function registerZscommentsFormOnPage(PageInterface $page): void
+  {
+    $form = $this->getZscommentsFormConfig();
+
+    if (!is_array($form)) {
+      return;
+    }
+
+    $formName = trim((string) ($form['name'] ?? 'zscomments')) ?: 'zscomments';
+    $form['name'] = $formName;
+
+    $page->addForms([$formName => $form], true);
   }
 
   private function getZscommentsCacheId($path = null, $lang = null)

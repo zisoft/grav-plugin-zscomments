@@ -1,3 +1,8 @@
+# v1.1.4
+## 06/14/2026
+1. [](#bugfix)
+    * **Harden frontend form registration against stale cache state.** The comments form could occasionally render with an empty `__form-name__`, causing submits to silently reload the page without saving or sending email until cache was cleared. The plugin now registers its form explicitly on the current page during request handling and renders the hidden form name directly from plugin config so submissions remain stable even when cached page/form state gets out of sync.
+
 # v1.1.3
 ## 06/12/2026
 1. [](#bugfix)

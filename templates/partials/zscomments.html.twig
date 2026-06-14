@@ -20,7 +20,7 @@
                   {% include "forms/fields/#{field.type}/#{field.type}.html.twig" %}
               </div>
           {% endfor %}
-          {% include "forms/fields/formname/formname.html.twig" %}
+          <input type="hidden" name="__form-name__" value="{{ zscomments_form.name|default('zscomments') }}" />
 
           {% set zscomment_buttons = zscomments_form.buttons is not empty
             ? zscomments_form.buttons
