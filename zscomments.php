@@ -517,14 +517,19 @@ class ZscommentsPlugin extends Plugin
       case 'addComment':
         $post = isset($_POST['data']) ? $_POST['data'] : [];
 
-        $path = $this->normalizeCommentRoute((string) ($post['path'] ?? $this->grav['uri']->path()));
+        // Get path - fallback to current URI if not provided or contains Twig syntax
+        $pathRaw = trim((string) ($post['path'] ?? ''));
+        if (empty($pathRaw) || str_contains($pathRaw, '{{') || str_contains($pathRaw, '{%')) {
+          $pathRaw = $this->grav['uri']->path();
+        }
+        $path = $this->normalizeCommentRoute($pathRaw);
 
-        $lang = filter_var(urldecode((string) $post['lang']), FILTER_SANITIZE_STRING);
-        $text = filter_var(urldecode((string) $post['text']), FILTER_SANITIZE_STRING);
-        $parent_id = filter_var(urldecode((string) $post['parent_id']), FILTER_SANITIZE_STRING);
-        $name = filter_var(urldecode((string) $post['name']), FILTER_SANITIZE_STRING);
-        $email = filter_var(urldecode((string) $post['email']), FILTER_SANITIZE_STRING);
-        $title = filter_var(urldecode((string) $post['title']), FILTER_SANITIZE_STRING);
+        $lang = trim(strip_tags(urldecode((string) ($post['lang'] ?? ''))));
+        $text = trim(strip_tags(urldecode((string) ($post['text'] ?? ''))));
+        $parent_id = trim(strip_tags(urldecode((string) ($post['parent_id'] ?? ''))));
+        $name = trim(strip_tags(urldecode((string) ($post['name'] ?? ''))));
+        $email = trim(urldecode((string) ($post['email'] ?? '')));
+        $title = trim(strip_tags(urldecode((string) ($post['title'] ?? ''))));
 
         if (isset($this->grav['user'])) {
           $user = $this->grav['user'];
@@ -536,7 +541,19 @@ class ZscommentsPlugin extends Plugin
 
         /** @var Language $language */
         $language = $this->grav['language'];
-        $lang = $language->getLanguage();
+        
+        // If lang is empty or contains Twig syntax, get it from language service
+        if (empty($lang) || str_contains($lang, '{{') || str_contains($lang, '{%')) {
+          $lang = $language->getLanguage();
+        }
+
+        // If title is empty or contains Twig syntax, get it from the current page
+        if (empty($title) || str_contains($title, '{{') || str_contains($title, '{%')) {
+          $currentPage = $this->grav['page'];
+          if ($currentPage instanceof PageInterface) {
+            $title = $currentPage->title();
+          }
+        }
 
         $filename = $this->getZscommentsFilename($path, $lang);
 

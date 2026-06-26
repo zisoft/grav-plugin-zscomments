@@ -14,7 +14,15 @@
           {% for field in zscomments_form.fields %}
               {% set value = form.value(field.name) %}
               {% if field.evaluateDefault %}
-                  {% set value = evaluate(field.evaluateDefault) %}
+                  {% if field.name == 'title' %}
+                      {% set value = grav.page.header.title %}
+                  {% elseif field.name == 'lang' %}
+                      {% set value = grav.language.getLanguage %}
+                  {% elseif field.name == 'path' %}
+                      {% set value = grav.uri.path %}
+                  {% else %}
+                      {% set value = evaluate(field.evaluateDefault) %}
+                  {% endif %}
               {% endif %}
               <div>
                   {% include "forms/fields/#{field.type}/#{field.type}.html.twig" %}

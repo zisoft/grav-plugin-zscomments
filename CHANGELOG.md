@@ -1,3 +1,9 @@
+# v1.1.5
+## 06/26/2026
+1. [](#bugfix)
+    * **Fixed Grav 2.0.3 compatibility issues.** After upgrading to Grav 2.0.3, the `evaluate()` Twig function used in form field evaluation stopped working correctly, causing literal Twig expressions like `{{ grav.page.header.title }}` and `{{ grav.uri.path }}` to be stored instead of actual values. This prevented comments from being properly saved and approved. Fixed by directly accessing Twig variables in the form template for `title`, `lang`, and `path` fields, and added server-side validation to detect and correct any unevaluated Twig syntax.
+    * **Fixed PHP 8.4+ compatibility.** Replaced deprecated `FILTER_SANITIZE_STRING` constant (removed in PHP 8.4) with `trim(strip_tags())` for form data sanitization, ensuring compatibility with PHP 8.5+.
+
 # v1.1.4
 ## 06/14/2026
 1. [](#bugfix)
