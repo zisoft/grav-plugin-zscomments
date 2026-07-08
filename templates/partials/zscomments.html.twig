@@ -80,7 +80,9 @@
                 </a>
               </div>
             </div>
-            {{ self.process_node(comments, comment.id, sort_order) }}
+            {% if comment.id is defined and comment.id is not empty %}
+              {{ self.process_node(comments, comment.id, sort_order) }}
+            {% endif %}
             </li>
             
             {% set first = false %}
