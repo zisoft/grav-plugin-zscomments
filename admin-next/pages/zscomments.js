@@ -630,6 +630,7 @@ class GravZscommentsAdminPage extends HTMLElement {
                         <td>
                           <div class="comment-title">${this.escapeHtml(comment.author || this.label('author_unknown', 'Unknown'))}</div>
                           <div class="comment-meta-line">${this.escapeHtml(comment.email || '')}</div>
+                          <div class="comment-meta-line">${this.escapeHtml(comment.ip)}</div>
                         </td>
                         <td>
                           <div>${this.escapeHtml(comment.pageTitle || url)}</div>

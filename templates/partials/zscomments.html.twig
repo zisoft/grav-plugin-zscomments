@@ -5,99 +5,102 @@
     {% do assets.addCss('plugins://zscomments/css/zscomments.css') %}
 
     <div class="comments-form">
-      <h3>{{'ICU.PLUGIN_ZSCOMMENTS.ADD_COMMENT'|t}}</h3>
+        <h3>{{ 'ICU.PLUGIN_ZSCOMMENTS.ADD_COMMENT'|t }}</h3>
 
-      <form name="{{ zscomments_form.name }}"
-            action="{{ zscomments_form.action ?  base_url ~ zscomments_form.action : page.url }}"
-            method="{{ zscomments_form.method|upper|default('POST') }}">
+        <form name="{{ zscomments_form.name }}"
+              action="{{ zscomments_form.action ?  base_url ~ zscomments_form.action : page.url }}"
+              method="{{ zscomments_form.method|upper|default('POST') }}">
 
-          {% for field in zscomments_form.fields %}
-              {% set value = form.value(field.name) %}
-              {% if field.evaluateDefault %}
-                  {% if field.name == 'title' %}
-                      {% set value = grav.page.header.title %}
-                  {% elseif field.name == 'lang' %}
-                      {% set value = grav.language.getLanguage %}
-                  {% elseif field.name == 'path' %}
-                      {% set value = grav.uri.path %}
-                  {% else %}
-                      {% set value = evaluate(field.evaluateDefault) %}
-                  {% endif %}
-              {% endif %}
-              <div>
-                  {% include "forms/fields/#{field.type}/#{field.type}.html.twig" %}
-              </div>
-          {% endfor %}
-          <input type="hidden" name="__form-name__" value="{{ zscomments_form.name|default('zscomments') }}" />
+            {% for field in zscomments_form.fields %}
+                {% set value = form.value(field.name) %}
+                {% if field.evaluateDefault %}
+                    {% if field.name == 'title' %}
+                        {% set value = grav.page.header.title %}
+                    {% elseif field.name == 'lang' %}
+                        {% set value = grav.language.getLanguage %}
+                    {% elseif field.name == 'path' %}
+                        {% set value = grav.uri.path %}
+                    {% else %}
+                        {% set value = evaluate(field.evaluateDefault) %}
+                    {% endif %}
+                {% endif %}
+                <div>
+                    {% include "forms/fields/#{field.type}/#{field.type}.html.twig" %}
+                </div>
+            {% endfor %}
+            <input type="hidden" name="__form-name__" value="{{ zscomments_form.name|default('zscomments') }}"/>
 
-          {% set zscomment_buttons = zscomments_form.buttons is not empty
-            ? zscomments_form.buttons
-            : [{ type: 'submit', value: 'ICU.PLUGIN_ZSCOMMENTS.SUBMIT_COMMENT_BUTTON_TEXT' }] %}
-          <div class="buttons">
-          {% for button in zscomment_buttons %}
-              <button class="button" type="{{ button.type|default('submit') }}">{{ button.value|t|default('Submit') }}</button>
-          {% endfor %}
-          </div>
+            {% set zscomment_buttons = zscomments_form.buttons is not empty
+                ? zscomments_form.buttons
+                : [{ type: 'submit', value: 'ICU.PLUGIN_ZSCOMMENTS.SUBMIT_COMMENT_BUTTON_TEXT' }] %}
+            <div class="buttons">
+                {% for button in zscomment_buttons %}
+                    <button class="button"
+                            type="{{ button.type|default('submit') }}">{{ button.value|t|default('Submit') }}</button>
+                {% endfor %}
+            </div>
 
-          {{ nonce_field('form', 'form-nonce')|raw }}
-      </form>
+            {{ nonce_field('form', 'form-nonce')|raw }}
+        </form>
 
-      <div class="alert">{{ form.message }}</div>
+        <div class="alert">{{ form.message }}</div>
     </div>
 
     {% if zscomments|length %}
 
-      <div class="comments-list">
-        <h3>{{'ICU.PLUGIN_ZSCOMMENTS.COMMENTS'|t}}</h3>
+        <div class="comments-list">
+            <h3>{{ 'ICU.PLUGIN_ZSCOMMENTS.COMMENTS'|t }}</h3>
 
-        {% macro process_node(comments, parent_id, sort_order) %}
-          {% import _self as self %}
+            {% macro process_node(comments, parent_id, sort_order) %}
+                {% import _self as self %}
 
-          {% set first = true %}
+                {% set first = true %}
 
-          {% for comment in comments|filter(c => c.is_pending == 0 and c.parent_id == parent_id)|sort((a,b) => sort_order == 'asc' ? a.date <=> b.date : b.date <=> a.date) %}
-            {% if first %}
-              <ul>
-            {% endif %}
+                {% for comment in comments|filter(c => c.is_pending == 0 and c.parent_id == parent_id)|sort((a,b) => sort_order == 'asc' ? a.date <=> b.date : b.date <=> a.date) %}
+                    {% if first %}
+                        <ul>
+                    {% endif %}
 
-            <li>
-            <div class="comment-entry">
-              <div class="comment-header">
-                <div class="comment-gravatar">
-                  <img src="https://www.gravatar.com/avatar/{{comment.email|ltrim|rtrim|md5}}?size=40">
-                </div>
-                <div class="comment-author-date">
-                  <div class="comment-author">{{comment.author}}</div>
-                  <div class="comment-date">{{comment.date|e}}</div>
-                </div>
-              </div>
-              <div class="comment-text">
-                {{comment.text}}
-              </div>
-              <div class="comment-reply">
-                <a href="javascript:document.getElementById('zscomment-reply-to').value='{{comment.id}}';document.getElementById('zscomment-name').focus();">
-                  {{ 'ICU.PLUGIN_ZSCOMMENTS.REPLY'|t }}
-                </a>
-              </div>
-            </div>
-            {% if comment.id is defined and comment.id is not empty %}
-              {{ self.process_node(comments, comment.id, sort_order) }}
-            {% endif %}
-            </li>
-            
-            {% set first = false %}
-          {% endfor %}
+                    <li>
+                        <div class="comment-entry">
+                            <div class="comment-header">
+                                <div class="comment-gravatar">
+                                    <img src="https://www.gravatar.com/avatar/{{ comment.email|ltrim|rtrim|md5 }}?size=40">
+                                </div>
+                                <div class="comment-author-date">
+                                    <div class="comment-author">{{ comment.author }}</div>
+                                    <div class="comment-date">{{ comment.date|e }}</div>
+                                </div>
+                            </div>
+                            <div class="comment-text">
+                                {{ comment.text }}
+                            </div>
+                            {% if comment.id is defined and comment.id is not empty %}
+                                <div class="comment-reply">
+                                    <a href="javascript:document.getElementById('zscomment-reply-to').value='{{ comment.id }}';document.getElementById('zscomment-name').focus();">
+                                        {{ 'ICU.PLUGIN_ZSCOMMENTS.REPLY'|t }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if comment.id is defined and comment.id is not empty %}
+                            {{ self.process_node(comments, comment.id, sort_order) }}
+                        {% endif %}
+                    </li>
 
-          {% if not first %}
-            </ul>
-          {% endif %}
-        {% endmacro process_node %}
+                    {% set first = false %}
+                {% endfor %}
 
-        {% from _self import process_node %}
+                {% if not first %}
+                    </ul>
+                {% endif %}
+            {% endmacro process_node %}
 
-        {{ process_node(zscomments, '', grav.config.plugins.zscomments.comment_order|default('desc')) }}
+            {% from _self import process_node %}
 
-      </div>
+            {{ process_node(zscomments, '', grav.config.plugins.zscomments.comment_order|default('desc')) }}
+
+        </div>
 
     {% endif %}
 {% endif %}

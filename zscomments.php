@@ -6,6 +6,7 @@ use Grav\Common\Filesystem\Folder;
 use Grav\Common\Plugin;
 use Grav\Common\Filesystem\RecursiveFolderFilterIterator;
 use Grav\Common\Page\Interfaces\PageInterface;
+use Grav\Common\Uri;
 use Grav\Common\Utils;
 use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Yaml\Yaml;
@@ -338,7 +339,8 @@ class ZscommentsPlugin extends Plugin
       'text' => $text,
       'date' => $this->getCurrentCommentDate(),
       'author' => $author,
-      'email' => $email
+      'email' => $email,
+      'ip' => Uri::ip(),
     ];
   }
 
@@ -576,11 +578,11 @@ class ZscommentsPlugin extends Plugin
             ];
           }
 
-          if (!isset($data['title'])) {
+          if (!isset($data['title']) || str_contains((string) $data['title'], '{{') || str_contains((string) $data['title'], '{%')) {
             $data['title'] = $title;
           }
 
-          if (!isset($data['lang'])) {
+          if (!isset($data['lang']) || str_contains((string) $data['lang'], '{{') || str_contains((string) $data['lang'], '{%')) {
             $data['lang'] = $lang;
           }
 
