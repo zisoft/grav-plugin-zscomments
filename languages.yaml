@@ -16,6 +16,8 @@ en:
       REPLY: Reply
       CONFIG:
         REQUIRE_APPROVAL: 'Require approval'
+        COLLECT_IP: 'Collect IP address'
+        COLLECT_IP_HELP: 'Collect IP address of the visitor. Please note that this may be sensitive data and should be handled with care. Mention this in your privacy policy if you enable this option.'
         ENABLE_ON_ROUTES: 'Enable on routes'
         ENABLE_ON_ROUTES_HELP: 'List of route prefixes where the plugin should be active.'
         DISABLE_ON_ROUTES: 'Disable on routes'
@@ -88,6 +90,8 @@ de:
       REPLY: Antworten
       CONFIG:
         REQUIRE_APPROVAL: 'Freigabe erforderlich'
+        COLLECT_IP: 'IP-Adresse erfassen'
+        COLLECT_IP_HELP: 'Erfasst die IP-Adresse des Besuchers. Bitte beachten Sie, dass dies sensible Daten sein können und mit Vorsicht behandelt werden sollten. Erwähnen Sie dies in Ihrer Datenschutzerklärung, wenn Sie diese Option aktivieren.'
         ENABLE_ON_ROUTES: 'Aktiv auf Routen'
         ENABLE_ON_ROUTES_HELP: 'Liste von Routen-Präfixen, auf denen das Plugin aktiv sein soll.'
         DISABLE_ON_ROUTES: 'Deaktiviert auf Routen'
@@ -196,6 +200,8 @@ es:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Requerir aprobación'
+        COLLECT_IP: 'Recopilar dirección IP'
+        COLLECT_IP_HELP: 'Recopila la dirección IP del visitante. Tenga en cuenta que estos pueden ser datos sensibles y deben tratarse con cuidado. Mencione esto en su política de privacidad si habilita esta opción.'
         ENABLE_ON_ROUTES: 'Activar en rutas'
         ENABLE_ON_ROUTES_HELP: 'Lista de prefijos de ruta donde el plugin debe estar activo.'
         DISABLE_ON_ROUTES: 'Desactivar en rutas'
@@ -268,6 +274,8 @@ fr:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Exiger une approbation'
+        COLLECT_IP: 'Collecter l’adresse IP'
+        COLLECT_IP_HELP: 'Collecte l’adresse IP du visiteur. Veuillez noter qu’il peut s’agir de données sensibles devant être traitées avec précaution. Mentionnez-le dans votre politique de confidentialité si vous activez cette option.'
         ENABLE_ON_ROUTES: 'Activer sur les routes'
         ENABLE_ON_ROUTES_HELP: 'Liste des préfixes de route sur lesquels le plugin doit être actif.'
         DISABLE_ON_ROUTES: 'Désactiver sur les routes'
@@ -340,6 +348,8 @@ hr:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Zahtijevaj odobrenje'
+        COLLECT_IP: 'Prikupljanje IP adrese'
+        COLLECT_IP_HELP: 'Prikuplja IP adresu posjetitelja. Imajte na umu da se radi o osjetljivim podacima s kojima treba postupati pažljivo. Spomenite ovo u svojoj politici privatnosti ako omogućite ovu opciju.'
         ENABLE_ON_ROUTES: 'Omogući na rutama'
         ENABLE_ON_ROUTES_HELP: 'Popis prefiksa ruta na kojima dodatak treba biti aktivan.'
         DISABLE_ON_ROUTES: 'Onemogući na rutama'
@@ -412,6 +422,8 @@ it:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Richiedi approvazione'
+        COLLECT_IP: 'Raccogli indirizzo IP'
+        COLLECT_IP_HELP: 'Raccoglie l’indirizzo IP del visitatore. Tieni presente che questi potrebbero essere dati sensibili e devono essere trattati con cura. Menzionalo nella tua informativa sulla privacy se abiliti questa opzione.'
         ENABLE_ON_ROUTES: 'Abilita sulle route'
         ENABLE_ON_ROUTES_HELP: 'Elenco dei prefissi di route in cui il plugin deve essere attivo.'
         DISABLE_ON_ROUTES: 'Disabilita sulle route'
@@ -484,6 +496,8 @@ ja:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 承認を必須にする
+        COLLECT_IP: IPアドレスを収集
+        COLLECT_IP_HELP: 訪問者のIPアドレスを収集します。これは機密データである可能性があるため、注意して取り扱ってください。このオプションを有効にする場合は、プライバシーポリシーにその旨を記載してください。
         ENABLE_ON_ROUTES: 有効にするルート
         ENABLE_ON_ROUTES_HELP: プラグインを有効にするルート接頭辞の一覧です。
         DISABLE_ON_ROUTES: 無効にするルート
@@ -556,6 +570,8 @@ nl:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Goedkeuring vereisen'
+        COLLECT_IP: 'IP-adres verzamelen'
+        COLLECT_IP_HELP: 'Verzamelt het IP-adres van de bezoeker. Houd er rekening mee dat dit gevoelige gegevens kunnen zijn en zorgvuldig moeten worden behandeld. Vermeld dit in je privacybeleid als je deze optie inschakelt.'
         ENABLE_ON_ROUTES: 'Inschakelen op routes'
         ENABLE_ON_ROUTES_HELP: 'Lijst met routevoorvoegsels waarop de plugin actief moet zijn.'
         DISABLE_ON_ROUTES: 'Uitschakelen op routes'
@@ -628,6 +644,8 @@ pl:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Wymagaj zatwierdzenia'
+        COLLECT_IP: 'Zbieraj adres IP'
+        COLLECT_IP_HELP: 'Zbiera adres IP odwiedzającego. Należy pamiętać, że mogą to być dane wrażliwe i należy je traktować z ostrożnością. Wspomnij o tym w swojej polityce prywatności, jeśli włączysz tę opcję.'
         ENABLE_ON_ROUTES: 'Włącz na trasach'
         ENABLE_ON_ROUTES_HELP: 'Lista prefiksów tras, na których wtyczka ma być aktywna.'
         DISABLE_ON_ROUTES: 'Wyłącz na trasach'
@@ -700,6 +718,8 @@ ru:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Требовать одобрение'
+        COLLECT_IP: 'Собирать IP-адрес'
+        COLLECT_IP_HELP: 'Собирает IP-адрес посетителя. Обратите внимание, что это могут быть конфиденциальные данные, и с ними следует обращаться осторожно. Упомяните об этом в своей политике конфиденциальности, если вы включите эту опцию.'
         ENABLE_ON_ROUTES: 'Включить на маршрутах'
         ENABLE_ON_ROUTES_HELP: 'Список префиксов маршрутов, на которых плагин должен быть активен.'
         DISABLE_ON_ROUTES: 'Отключить на маршрутах'
@@ -772,6 +792,8 @@ pt-br:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Exigir aprovação'
+        COLLECT_IP: 'Coletar endereço IP'
+        COLLECT_IP_HELP: 'Coleta o endereço IP do visitante. Observe que esses podem ser dados sensíveis e devem ser tratados com cuidado. Mencione isso em sua política de privacidade se você habilitar esta opção.'
         ENABLE_ON_ROUTES: 'Ativar nas rotas'
         ENABLE_ON_ROUTES_HELP: 'Lista de prefixos de rota em que o plugin deve ficar ativo.'
         DISABLE_ON_ROUTES: 'Desativar nas rotas'
@@ -844,6 +866,8 @@ ro:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Necesită aprobare'
+        COLLECT_IP: 'Colectează adresa IP'
+        COLLECT_IP_HELP: 'Colectează adresa IP a vizitatorului. Rețineți că acestea pot fi date sensibile și trebuie tratate cu grijă. Menționați acest lucru în politica dvs. de confidențialitate dacă activați această opțiune.'
         ENABLE_ON_ROUTES: 'Activează pe rute'
         ENABLE_ON_ROUTES_HELP: 'Listă de prefixe de rută pe care pluginul trebuie să fie activ.'
         DISABLE_ON_ROUTES: 'Dezactivează pe rute'
@@ -916,6 +940,8 @@ ro:
         PLUGIN_TITLE: ZSComments
       CONFIG:
         REQUIRE_APPROVAL: 'Krev godkjenning'
+        COLLECT_IP: 'Samle inn IP-adresse'
+        COLLECT_IP_HELP: 'Samler inn IP-adressen til den besøkende. Vær oppmerksom på at dette kan være sensitive data og bør behandles med forsiktighet. Nevn dette i personvernerklæringen din hvis du aktiverer dette alternativet.'
         ENABLE_ON_ROUTES: 'Aktiver på ruter'
         ENABLE_ON_ROUTES_HELP: 'Liste over ruteprefikser der pluginen skal være aktiv.'
         DISABLE_ON_ROUTES: 'Deaktiver på ruter'

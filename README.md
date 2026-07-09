@@ -75,21 +75,22 @@ You can configure ZSComments either:
 
 ### Main options
 
-| Option | Default | Description |
-|---|---:|---|
-| `enabled` | `true` | Enables the plugin. |
-| `require_approval` | `true` | New comments are stored as pending until approved. |
-| `approval_email` | `mail@example.com` | Recipient for moderation emails. |
-| `approval_from` | `Grav CMS <noreply@example.com>` | Sender used for moderation emails. Use a valid sender address for your mail setup. |
-| `approval_subject` | `New comment` | Subject line for moderation emails. |
-| `quickreply_name` | `Your name` | Author name used for quick replies created during approval. |
-| `quickreply_email` | `mail@example.com` | Email used for quick replies created during approval. |
-| `comment_order` | `desc` | Frontend output order for approved comments: `asc` or `desc`. |
-| `enable_on_routes` | `['/']` | Route prefixes where the plugin should be active. |
-| `disable_on_routes` | `[]` | Exact routes where the plugin should stay disabled even if matched by `enable_on_routes`. |
-| `lock_timeout` | `5` | Maximum wait time in seconds for a comment file lock. |
-| `lock_retry_delay` | `100000` | Delay between lock retries in microseconds. |
-| `lock_stale_timeout` | `30` | Removes stale lock directories after this many seconds. |
+| Option               |                          Default | Description |
+|----------------------|---------------------------------:|---|
+| `enabled`            |                           `true` | Enables the plugin. |
+| `require_approval`   |                           `true` | New comments are stored as pending until approved. |
+| `collect_ip`         |                          `false` | Collect IP address of the visitor. Please note that this may be sensitive data and should be handled with care. Mention this in your privacy policy if you enable this option. |
+| `approval_email`     |               `mail@example.com` | Recipient for moderation emails. |
+| `approval_from`      | `Grav CMS <noreply@example.com>` | Sender used for moderation emails. Use a valid sender address for your mail setup. |
+| `approval_subject`   |                    `New comment` | Subject line for moderation emails. |
+| `quickreply_name`    |                      `Your name` | Author name used for quick replies created during approval. |
+| `quickreply_email`   |               `mail@example.com` | Email used for quick replies created during approval. |
+| `comment_order`      |                           `desc` | Frontend output order for approved comments: `asc` or `desc`. |
+| `enable_on_routes`   |                          `['/']` | Route prefixes where the plugin should be active. |
+| `disable_on_routes`  |                             `[]` | Exact routes where the plugin should stay disabled even if matched by `enable_on_routes`. |
+| `lock_timeout`       |                              `5` | Maximum wait time in seconds for a comment file lock. |
+| `lock_retry_delay`   |                         `100000` | Delay between lock retries in microseconds. |
+| `lock_stale_timeout` |                             `30` | Removes stale lock directories after this many seconds. |
 
 ### Example configuration
 
