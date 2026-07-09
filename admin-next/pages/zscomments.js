@@ -547,6 +547,13 @@ class GravZscommentsAdminPage extends HTMLElement {
           display: grid;
           gap: 0.2rem;
         }
+        a.comment-card-page {
+          color: inherit;
+          text-decoration: none;
+        }
+        a.comment-card-page:hover {
+          text-decoration: underline;
+        }
         .comment-card-status {
           display: grid;
           gap: 0.3rem;
@@ -658,10 +665,10 @@ class GravZscommentsAdminPage extends HTMLElement {
                           <div class="comment-title">${this.escapeHtml(comment.author || this.label('author_unknown', 'Unknown'))}</div>
                           ${identityMeta ? `<div class="comment-meta-line">${identityMeta}</div>` : ''}
                         </div>
-                        <div class="comment-card-page">
+                        <a class="comment-card-page" href="${this.escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
                           <div>${this.escapeHtml(comment.pageTitle || url)}</div>
                           <div class="comment-meta-line">${this.escapeHtml(url)}${lang ? ` · ${this.escapeHtml(lang)}` : ''}</div>
-                        </div>
+                        </a>
                         <div class="comment-card-status">
                           <span class="badge ${isPending ? 'pending' : 'approved'}">${this.escapeHtml(isPending ? this.label('status_pending', 'Pending') : this.label('status_approved', 'Approved'))}</span>
                           <div class="comment-meta-line">${this.escapeHtml(comment.date || '')}</div>
