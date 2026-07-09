@@ -515,19 +515,54 @@ class GravZscommentsAdminPage extends HTMLElement {
           font-size: 0.85rem;
           color: hsl(240 3.8% 46.1%);
         }
-        .comments-table th,
-        .comments-table td {
-          padding-top: 0.55rem;
-          padding-bottom: 0.55rem;
+        .comments-list {
+          display: grid;
+          gap: 1rem;
         }
-        .comment-row-details td {
-          padding-top: 0.25rem;
-          padding-bottom: 0.8rem;
-          background: hsl(240 4.8% 98.5%);
+        .comment-card {
+          display: grid;
+          gap: 0.75rem;
+          border: 1px solid hsl(240 5.9% 90%);
+          border-left: 4px solid hsl(240 5.9% 90%);
+          border-radius: 0.8rem;
+          padding: 1rem 1.1rem;
+          background: white;
         }
-        .comment-cell-text {
-          line-height: 1.5;
+        .comment-card:nth-child(even) {
+          background: hsl(240 4.8% 97%);
+        }
+        .comment-card.is-pending {
+          border-left-color: hsl(38 92% 50%);
+          background: hsl(48 96% 96%);
+        }
+        .comment-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+        .comment-card-identity,
+        .comment-card-page {
+          display: grid;
+          gap: 0.2rem;
+        }
+        .comment-card-status {
+          display: grid;
+          gap: 0.3rem;
+          justify-items: end;
+          text-align: right;
+        }
+        .comment-card-body {
+          line-height: 1.55;
           white-space: normal;
+          padding: 0.8rem 0;
+          border-top: 1px solid hsl(240 5.9% 92%);
+          border-bottom: 1px solid hsl(240 5.9% 92%);
+        }
+        .comment-card-footer {
+          display: grid;
+          gap: 0.6rem;
         }
         .comment-meta-line {
           font-size: 0.85rem;
@@ -606,55 +641,44 @@ class GravZscommentsAdminPage extends HTMLElement {
             ${loading && !hasComments ? `<div class="empty">${this.escapeHtml(this.label('loading_comments', 'Loading comments …'))}</div>` : ''}
             ${!loading && !hasComments ? `<div class="empty">${this.escapeHtml(this.label('no_comments', 'No comments found.'))}</div>` : ''}
             ${hasComments ? `
-              <table class="comments-table">
-                <thead>
-                  <tr>
-                    <th>${this.escapeHtml(this.label('column_author', 'Author'))}</th>
-                    <th>${this.escapeHtml(this.label('column_page', 'Page'))}</th>
-                    <th>${this.escapeHtml(this.label('column_date', 'Date'))}</th>
-                    <th>${this.escapeHtml(this.label('column_status', 'Status'))}</th>
-                    <th style="text-align:right;">${this.escapeHtml(this.label('column_actions', 'Actions'))}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${data.comments.map((comment) => {
-                    const commentKey = `${comment.id}`;
-                    const approveKey = `approve:${commentKey}`;
-                    const deleteKey = `delete:${commentKey}`;
-                    const isPending = Number(comment.is_pending || 0) === 1;
-                    const lang = comment.lang || '';
-                    const url = comment.url || '/';
+              <div class="comments-list">
+                ${data.comments.map((comment) => {
+                  const commentKey = `${comment.id}`;
+                  const approveKey = `approve:${commentKey}`;
+                  const deleteKey = `delete:${commentKey}`;
+                  const isPending = Number(comment.is_pending || 0) === 1;
+                  const lang = comment.lang || '';
+                  const url = comment.url || '/';
+                  const identityMeta = [comment.email, comment.ip].filter(Boolean).map((value) => this.escapeHtml(value)).join(' · ');
 
-                    return `
-                      <tr class="comment-row-main">
-                        <td>
+                  return `
+                    <article class="comment-card ${isPending ? 'is-pending' : ''}">
+                      <header class="comment-card-header">
+                        <div class="comment-card-identity">
                           <div class="comment-title">${this.escapeHtml(comment.author || this.label('author_unknown', 'Unknown'))}</div>
-                          <div class="comment-meta-line">${this.escapeHtml(comment.email || '')}</div>
-                          <div class="comment-meta-line">${this.escapeHtml(comment.ip)}</div>
-                        </td>
-                        <td>
+                          ${identityMeta ? `<div class="comment-meta-line">${identityMeta}</div>` : ''}
+                        </div>
+                        <div class="comment-card-page">
                           <div>${this.escapeHtml(comment.pageTitle || url)}</div>
                           <div class="comment-meta-line">${this.escapeHtml(url)}${lang ? ` · ${this.escapeHtml(lang)}` : ''}</div>
-                        </td>
-                        <td>${this.escapeHtml(comment.date || '')}</td>
-                        <td><span class="badge ${isPending ? 'pending' : 'approved'}">${this.escapeHtml(isPending ? this.label('status_pending', 'Pending') : this.label('status_approved', 'Approved'))}</span></td>
-                        <td>
-                          <div class="comment-actions">
-                            ${isPending ? `<button class="button primary small" data-approve data-id="${this.escapeHtml(commentKey)}" data-url="${this.escapeHtml(url)}" data-lang="${this.escapeHtml(lang)}" ${actionKey === approveKey ? 'disabled' : ''}>${this.escapeHtml(actionKey === approveKey ? this.label('approve_running', 'Approving …') : this.label('approve', 'Approve'))}</button>` : ''}
-                            <button class="button danger small" data-delete data-id="${this.escapeHtml(commentKey)}" data-url="${this.escapeHtml(url)}" data-lang="${this.escapeHtml(lang)}" ${actionKey === deleteKey ? 'disabled' : ''}>${this.escapeHtml(actionKey === deleteKey ? this.label('delete_running', 'Deleting …') : this.label('delete', 'Delete'))}</button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr class="comment-row-details">
-                        <td colspan="5">
-                          <div class="comment-cell-text">${this.formatCommentText(comment.text || '')}</div>
-                          ${isPending ? `<textarea class="quickreply" data-quickreply="${this.escapeHtml(commentKey)}" placeholder="${this.escapeHtml(this.label('quickreply_placeholder', 'Optional quick reply for approval'))}"></textarea>` : ''}
-                        </td>
-                      </tr>
-                    `;
-                  }).join('')}
-                </tbody>
-              </table>
+                        </div>
+                        <div class="comment-card-status">
+                          <span class="badge ${isPending ? 'pending' : 'approved'}">${this.escapeHtml(isPending ? this.label('status_pending', 'Pending') : this.label('status_approved', 'Approved'))}</span>
+                          <div class="comment-meta-line">${this.escapeHtml(comment.date || '')}</div>
+                        </div>
+                      </header>
+                      <div class="comment-card-body">${this.formatCommentText(comment.text || '')}</div>
+                      <footer class="comment-card-footer">
+                        ${isPending ? `<textarea class="quickreply" data-quickreply="${this.escapeHtml(commentKey)}" placeholder="${this.escapeHtml(this.label('quickreply_placeholder', 'Optional quick reply for approval'))}"></textarea>` : ''}
+                        <div class="comment-actions">
+                          ${isPending ? `<button class="button primary small" data-approve data-id="${this.escapeHtml(commentKey)}" data-url="${this.escapeHtml(url)}" data-lang="${this.escapeHtml(lang)}" ${actionKey === approveKey ? 'disabled' : ''}>${this.escapeHtml(actionKey === approveKey ? this.label('approve_running', 'Approving …') : this.label('approve', 'Approve'))}</button>` : ''}
+                          <button class="button danger small" data-delete data-id="${this.escapeHtml(commentKey)}" data-url="${this.escapeHtml(url)}" data-lang="${this.escapeHtml(lang)}" ${actionKey === deleteKey ? 'disabled' : ''}>${this.escapeHtml(actionKey === deleteKey ? this.label('delete_running', 'Deleting …') : this.label('delete', 'Delete'))}</button>
+                        </div>
+                      </footer>
+                    </article>
+                  `;
+                }).join('')}
+              </div>
             ` : ''}
             ${canLoadMore ? `<div class="center"><button class="button" data-action="load-more" ${loading ? 'disabled' : ''}>${this.escapeHtml(this.label('load_more', 'Load more'))}</button></div>` : ''}
           </div>
