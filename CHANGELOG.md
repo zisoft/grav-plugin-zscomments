@@ -1,3 +1,15 @@
+# v1.2.0
+## 07/09/2026
+1. [](#new)
+    * **Added an option to collect the visitor's IP address.** A new `collect_ip` config toggle (disabled by default) controls whether the IP is stored with each comment; the admin field help reminds you to mention this in your privacy policy if you enable it.
+    * **Redesigned the comments list as a card layout**, with the page title now linking to the commented page and a hover effect on cards.
+2. [](#improved)
+    * **Refactored the comment-approval email template** into a dedicated `zscomments_email.html.twig` partial for clearer, more maintainable notifications.
+3. [](#bugfix)
+    * **Fixed an infinite recursion crash when rendering legacy comments without an `id`/`parent_id`.** Comments missing these fields all matched as children of one another under Twig's loose `==` comparison, causing a stack overflow as soon as the comments partial rendered; they are now displayed flat instead.
+    * **Hid the reply button on comments without an id**, since those comments can't actually be replied to.
+    * **Fixed `title`/`lang` fields falling back to literal `{{ }}`/`{% %}` Twig expressions** instead of the actual page value after a bad migration.
+
 # v1.1.6
 ## 06/27/2026
 1. [](#bugfix)
