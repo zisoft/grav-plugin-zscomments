@@ -1,7 +1,7 @@
 name: ZSComments
 type: plugin
 slug: zscomments
-version: 1.1.6
+version: 1.2.0
 description: Adds a commenting functionality to your site
 icon: comments
 author:
@@ -43,6 +43,18 @@ form:
       options:
         1: ICU.PLUGIN_ADMIN.ENABLED
         0: ICU.PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+
+    collect_ip:
+      type: toggle
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.COLLECT_IP
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.COLLECT_IP_HELP
+      highlight: 1
+      default: 0
+      options:
+         1: ICU.PLUGIN_ADMIN.ENABLED
+         0: ICU.PLUGIN_ADMIN.DISABLED
       validate:
         type: bool
 

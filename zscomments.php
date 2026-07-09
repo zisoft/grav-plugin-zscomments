@@ -6,6 +6,7 @@ use Grav\Common\Filesystem\Folder;
 use Grav\Common\Plugin;
 use Grav\Common\Filesystem\RecursiveFolderFilterIterator;
 use Grav\Common\Page\Interfaces\PageInterface;
+use Grav\Common\Uri;
 use Grav\Common\Utils;
 use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Yaml\Yaml;
@@ -338,7 +339,8 @@ class ZscommentsPlugin extends Plugin
       'text' => $text,
       'date' => $this->getCurrentCommentDate(),
       'author' => $author,
-      'email' => $email
+      'email' => $email,
+      'ip' => $this->config->get('plugins.zscomments.collect_ip', false) ? Uri::ip() : '-',
     ];
   }
 
@@ -576,11 +578,11 @@ class ZscommentsPlugin extends Plugin
             ];
           }
 
-          if (!isset($data['title'])) {
+          if (!isset($data['title']) || str_contains((string) $data['title'], '{{') || str_contains((string) $data['title'], '{%')) {
             $data['title'] = $title;
           }
 
-          if (!isset($data['lang'])) {
+          if (!isset($data['lang']) || str_contains((string) $data['lang'], '{{') || str_contains((string) $data['lang'], '{%')) {
             $data['lang'] = $lang;
           }
 
@@ -599,7 +601,7 @@ class ZscommentsPlugin extends Plugin
         // send email
         $uri = $this->grav['uri'];
         $vars = [
-          'base_uri' =>  $uri->scheme() . $uri->host() . ($uri->port() ? ':' . $uri->port() : ''),
+          'base_uri' => $uri->rootUrl(true),
           'page' => $this->grav['page'],
           'comment' => $comment
         ];
@@ -607,7 +609,7 @@ class ZscommentsPlugin extends Plugin
         $to = trim((string) $this->config->get('plugins.zscomments.approval_email', 'mail@zisoft.de'));
         $from = trim((string) $this->config->get('plugins.zscomments.approval_from', 'zisoft Grav CMS <norply@zisoft.de>'));
         $subject = trim((string) $this->config->get('plugins.zscomments.approval_subject', 'Neuer Kommentar auf zisoft.de'));
-        $content = $this->grav['twig']->processTemplate('/partials/zscomment_email.html.twig', $vars);
+        $content = $this->grav['twig']->processTemplate('/partials/zscomments_email.html.twig', $vars);
 
         $message = $this->grav['Email']->message($subject, $content, 'text/html')
           ->setFrom($from)
