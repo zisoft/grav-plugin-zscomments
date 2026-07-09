@@ -601,7 +601,7 @@ class ZscommentsPlugin extends Plugin
         // send email
         $uri = $this->grav['uri'];
         $vars = [
-          'base_uri' =>  $uri->scheme() . $uri->host() . ($uri->port() ? ':' . $uri->port() : ''),
+          'base_uri' => $uri->rootUrl(true),
           'page' => $this->grav['page'],
           'comment' => $comment
         ];
@@ -609,7 +609,7 @@ class ZscommentsPlugin extends Plugin
         $to = trim((string) $this->config->get('plugins.zscomments.approval_email', 'mail@zisoft.de'));
         $from = trim((string) $this->config->get('plugins.zscomments.approval_from', 'zisoft Grav CMS <norply@zisoft.de>'));
         $subject = trim((string) $this->config->get('plugins.zscomments.approval_subject', 'Neuer Kommentar auf zisoft.de'));
-        $content = $this->grav['twig']->processTemplate('/partials/zscomment_email.html.twig', $vars);
+        $content = $this->grav['twig']->processTemplate('/partials/zscomments_email.html.twig', $vars);
 
         $message = $this->grav['Email']->message($subject, $content, 'text/html')
           ->setFrom($from)

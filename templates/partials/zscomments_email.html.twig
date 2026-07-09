@@ -1,0 +1,83 @@
+{% set page_url = page.url(true) %}
+<!DOCTYPE html>
+<html lang="{{ grav.language.getLanguage()|default('en') }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ comment.author }} — {{ page.title }}</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f5; font-family: Arial, Helvetica, sans-serif; color:#18181b;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f5; padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; width:100%; background-color:#ffffff; border-radius:8px; border:1px solid #e4e4e7;">
+          <tr>
+            <td style="padding:24px 32px; border-bottom:1px solid #e4e4e7;">
+              <a href="{{ page_url }}" style="font-size:18px; font-weight:bold; color:#18181b; text-decoration:none;">{{ page.title }}</a>
+              <div style="font-size:13px; color:#71717a; margin-top:4px;">
+                <a href="{{ page_url }}" style="color:#71717a; text-decoration:underline;">{{ page_url }}</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px; margin-bottom:20px;">
+                <tr>
+                  <td style="padding:4px 8px 4px 0; color:#71717a; white-space:nowrap; vertical-align:top;">{{ 'ICU.PLUGIN_ZSCOMMENTS.NAME_LABEL'|t }}</td>
+                  <td style="padding:4px 0;">{{ comment.author }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 8px 4px 0; color:#71717a; white-space:nowrap; vertical-align:top;">{{ 'ICU.PLUGIN_ZSCOMMENTS.EMAIL_LABEL'|t }}</td>
+                  <td style="padding:4px 0;"><a href="mailto:{{ comment.email }}" style="color:#2563eb;">{{ comment.email }}</a></td>
+                </tr>
+                {% if comment.ip is defined and comment.ip %}
+                <tr>
+                  <td style="padding:4px 8px 4px 0; color:#71717a; white-space:nowrap; vertical-align:top;">IP</td>
+                  <td style="padding:4px 0;">{{ comment.ip }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                  <td style="padding:4px 8px 4px 0; color:#71717a; white-space:nowrap; vertical-align:top;">ID</td>
+                  <td style="padding:4px 0; font-family: monospace;">{{ comment.id }}</td>
+                </tr>
+              </table>
+
+              <div style="font-size:13px; color:#71717a; margin-bottom:8px;">{{ 'ICU.PLUGIN_ZSCOMMENTS.MESSAGE_LABEL'|t }}</div>
+              <div style="background-color:#f4f4f5; border-radius:6px; padding:16px; font-size:14px; line-height:1.6; white-space:pre-wrap;">{{ comment.text }}</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 24px;">
+              <form method="GET" action="{{ base_uri }}/zscomments-approve" style="margin:0 0 16px;">
+                <input type="hidden" name="id" value="{{ comment.id }}">
+                <input type="hidden" name="url" value="{{ page_url }}">
+                <label style="display:block; font-size:13px; color:#71717a; margin-bottom:6px;">{{ 'ICU.PLUGIN_ZSCOMMENTS.QUICK_REPLY_LABEL'|t }}</label>
+                <textarea name="quickreply" rows="4" style="width:100%; box-sizing:border-box; border:1px solid #e4e4e7; border-radius:6px; padding:10px; font-family:inherit; font-size:14px; margin-bottom:12px;"></textarea>
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="border-radius:6px; background-color:#16a34a;">
+                      <button type="submit" style="border:0; background:transparent; color:#ffffff; font-size:14px; font-weight:bold; padding:10px 20px; cursor:pointer;">{{ 'ICU.PLUGIN_ZSCOMMENTS.ADMIN.APPROVE'|t|default('Approve comment') }}</button>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+
+              <form method="GET" action="{{ base_uri }}/zscomments-delete" style="margin:0;">
+                <input type="hidden" name="id" value="{{ comment.id }}">
+                <input type="hidden" name="url" value="{{ page_url }}">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="border-radius:6px; background-color:#dc2626;">
+                      <button type="submit" style="border:0; background:transparent; color:#ffffff; font-size:14px; font-weight:bold; padding:10px 20px; cursor:pointer;">{{ 'ICU.PLUGIN_ZSCOMMENTS.ADMIN.DELETE'|t|default('Delete comment') }}</button>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
