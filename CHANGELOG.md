@@ -1,3 +1,8 @@
+# v1.2.1
+## 07/13/2026
+1. [](#bugfix)
+    * **Sanitized comment text, author, and email as UTF-8 before saving.** A browser or bot submitting non-UTF-8 bytes (e.g. Latin-1) would sit unnoticed in the YAML file until an admin opened the comments list, silently breaking the whole response instead of just that one comment. Ill-formed byte sequences are now replaced at save time.
+
 # v1.2.0
 ## 07/09/2026
 1. [](#new)
