@@ -340,7 +340,7 @@ class ZscommentsPlugin extends Plugin
       'date' => $this->getCurrentCommentDate(),
       'author' => $this->sanitizeUtf8((string) $author),
       'email' => $this->sanitizeUtf8((string) $email),
-      'ip' => Uri::ip(),
+      'ip' => $this->config->get('plugins.zscomments.collect_ip', false) ? Uri::ip() : '-',
     ];
   }
 
