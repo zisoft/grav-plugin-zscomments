@@ -336,12 +336,30 @@ class ZscommentsPlugin extends Plugin
       'id' => Utils::uniqueId(),
       'parent_id' => $parentId,
       'is_pending' => $isPending,
-      'text' => $text,
+      'text' => $this->sanitizeUtf8((string) $text),
       'date' => $this->getCurrentCommentDate(),
-      'author' => $author,
-      'email' => $email,
-      'ip' => $this->config->get('plugins.zscomments.collect_ip', false) ? Uri::ip() : '-',
+      'author' => $this->sanitizeUtf8((string) $author),
+      'email' => $this->sanitizeUtf8((string) $email),
+      'ip' => Uri::ip(),
     ];
+  }
+
+  /**
+   * Submitted comments are persisted to YAML as-is; a browser/bot sending
+   * non-UTF-8 bytes (e.g. Latin-1) would otherwise sit in the file until an
+   * admin listing tries to json_encode() it, silently failing the whole
+   * response instead of just that one comment (see API unhandled exception,
+   * Stream::create() TypeError). mb_convert_encoding(UTF-8, UTF-8) replaces
+   * ill-formed byte sequences with the substitute character, same effect as
+   * mb_scrub() which requires PHP 8.1+.
+   */
+  private function sanitizeUtf8(string $value): string
+  {
+    if ($value === '' || mb_check_encoding($value, 'UTF-8')) {
+      return $value;
+    }
+
+    return mb_convert_encoding($value, 'UTF-8', 'UTF-8');
   }
 
   private function updateCommentInFile($filename, $id, callable $updater)
