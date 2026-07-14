@@ -19,6 +19,7 @@ It started as a fork of the original Grav Comments plugin, but has been adapted 
 - configurable frontend comment order (`asc` / `desc`)
 - route-based enable / disable rules
 - Gravatar support
+- honeypot field and regex-based spam filtering
 - YAML storage in `user/data/zscomments`
 - lock-directory based concurrent file access without relying on `flock()`
 - optional reCAPTCHA integration via Grav Form
@@ -88,6 +89,8 @@ You can configure ZSComments either:
 | `comment_order`      |                           `desc` | Frontend output order for approved comments: `asc` or `desc`. |
 | `enable_on_routes`   |                          `['/']` | Route prefixes where the plugin should be active. |
 | `disable_on_routes`  |                             `[]` | Exact routes where the plugin should stay disabled even if matched by `enable_on_routes`. |
+| `honeypot_field_name`|                            `''` | Name of a hidden honeypot form field. Real visitors never fill it in; a submission with it non-empty is silently dropped. Leave empty to disable. |
+| `blocked_scripts`    |                            `''` | Regular expression checked against the comment text and name; a match cancels the submission. Leave empty to disable. |
 | `lock_timeout`       |                              `5` | Maximum wait time in seconds for a comment file lock. |
 | `lock_retry_delay`   |                         `100000` | Delay between lock retries in microseconds. |
 | `lock_stale_timeout` |                             `30` | Removes stale lock directories after this many seconds. |
@@ -157,6 +160,36 @@ Relevant ZSComments settings:
 - `approval_email`
 - `approval_from`
 - `approval_subject`
+
+## Spam protection
+
+Besides the optional reCAPTCHA integration, ZSComments offers two lightweight, config-only spam filters. Both run in `onFormProcessed`, before the comment is saved or any email is sent, and both fail safe by simply cancelling the submission (no error is shown to the visitor).
+
+### Honeypot field
+
+Set `honeypot_field_name` to any field name (e.g. `hp_name`) and the frontend partial renders a hidden input with that name. Real visitors never see or fill it in, but most spam bots fill every field they find. If the field comes back non-empty, the submission is dropped.
+
+```yaml
+honeypot_field_name: hp_name
+```
+
+Leave it empty (the default) to disable this check.
+
+### Blocked scripts / regex filter
+
+Set `blocked_scripts` to a regular expression (without delimiters) checked against the submitted comment text and name. Any match cancels the submission. This is typically used to reject a specific Unicode script commonly used by spam, e.g.:
+
+```yaml
+blocked_scripts: '\p{Cyrillic}'
+```
+
+Notes:
+
+- the pattern is matched with the Unicode (`u`) modifier
+- if the pattern is invalid, the filter is skipped (fails open) and a warning is logged instead of blocking every comment
+- keep the pattern simple: since it runs against untrusted visitor input, a complex regex with nested quantifiers can be exploited to hang the server (ReDoS)
+
+Leave it empty (the default) to disable this check.
 
 ## Comment storage
 
