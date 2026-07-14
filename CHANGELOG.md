@@ -1,3 +1,9 @@
+# v1.3.0
+## 07/14/2026
+1. [](#new)
+    * **Added a honeypot field for spam protection.** A new `honeypot_field_name` config option lets you name a hidden form field that real visitors never fill in; if a submission arrives with that field non-empty, the whole form process (save + notification email) is cancelled silently.
+    * **Added a `blocked_scripts` regex filter.** Comments whose text or name match this admin-configured regular expression (e.g. `\p{Cyrillic}` to reject a different script) are cancelled before saving. An invalid pattern fails open — the filter is skipped and a warning is logged — instead of blocking every comment.
+
 # v1.2.1
 ## 07/13/2026
 1. [](#bugfix)

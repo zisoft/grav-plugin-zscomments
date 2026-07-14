@@ -562,8 +562,6 @@ class ZscommentsPlugin extends Plugin
       $pattern = "\x01" . $blockedScripts . "\x01u";
       $matched = @preg_match($pattern, $content);
 
-      var_dump($matched);
-
       if ($matched === false) {
         $this->grav['log']->warning('zscomments: invalid "blocked_scripts" regex, comment filter skipped: ' . $blockedScripts);
       } elseif ($matched === 1) {
