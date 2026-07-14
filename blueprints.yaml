@@ -70,6 +70,12 @@ form:
       help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.DISABLE_ON_ROUTES_HELP
       value_only: true
 
+    honeypot_field_name:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.HONEYPOT_FIELD_NAME
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.HONEYPOT_FIELD_NAME_HELP
+      placeholder: 'e.g. hp_name'
+
     approval_email:
       type: email
       label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.APPROVAL_EMAIL

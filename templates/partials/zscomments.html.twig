@@ -30,6 +30,10 @@
             {% endfor %}
             <input type="hidden" name="__form-name__" value="{{ zscomments_form.name|default('zscomments') }}"/>
 
+            {% if grav.config.get('plugins.zscomments.honeypot_field_name') is not empty %}
+                <input type="text" alt="" aria-label="" style="display: none" name="data[{{ grav.config.get('plugins.zscomments.honeypot_field_name') }}]" value=""/>
+            {% endif %}
+
             {% set zscomment_buttons = zscomments_form.buttons is not empty
                 ? zscomments_form.buttons
                 : [{ type: 'submit', value: 'ICU.PLUGIN_ZSCOMMENTS.SUBMIT_COMMENT_BUTTON_TEXT' }] %}

@@ -1,4 +1,5 @@
 <?php
+
 namespace Grav\Plugin;
 
 use Composer\Autoload\ClassLoader;
@@ -18,8 +19,8 @@ class ZscommentsPlugin extends Plugin
   protected $zscomments_cache_id;
 
   /**
-     * @return array
-     */
+   * @return array
+   */
   public static function getSubscribedEvents()
   {
     return [
@@ -42,7 +43,7 @@ class ZscommentsPlugin extends Plugin
         $uri->query('id'),
         $uri->query('url'),
         $this->grav['language']->getLanguage(),
-        trim(strip_tags(urldecode((string) $uri->query('quickreply'))))
+        trim(strip_tags(urldecode((string)$uri->query('quickreply'))))
       );
       return;
     }
@@ -60,10 +61,10 @@ class ZscommentsPlugin extends Plugin
   }
 
   /**
-     * Add the comment form information to the page header dynamically
-     *
-     * Used by Form plugin >= 2.0
-     */
+   * Add the comment form information to the page header dynamically
+   *
+   * Used by Form plugin >= 2.0
+   */
   public function onFormPageHeaderProcessed(Event $event)
   {
     $header = $event['header'];
@@ -77,7 +78,8 @@ class ZscommentsPlugin extends Plugin
     $event->header = $header;
   }
 
-  public function onTwigSiteVariables() {
+  public function onTwigSiteVariables()
+  {
     $enabled = $this->enable;
     $zscomments = $this->fetchZscomments();
 
@@ -131,7 +133,7 @@ class ZscommentsPlugin extends Plugin
   }
 
   /**
-     */
+   */
   public function onPluginsInitialized()
   {
     $this->grav['zscomments_plugin'] = $this;
@@ -173,7 +175,7 @@ class ZscommentsPlugin extends Plugin
   {
     $user = $event['user'] ?? null;
 
-    if (!$user || !(bool) $user->get('access.api.super')) {
+    if (!$user || !(bool)$user->get('access.api.super')) {
       return;
     }
 
@@ -199,7 +201,7 @@ class ZscommentsPlugin extends Plugin
 
     $user = $event['user'] ?? null;
 
-    if (!$user || !(bool) $user->get('access.api.super')) {
+    if (!$user || !(bool)$user->get('access.api.super')) {
       return;
     }
 
@@ -228,7 +230,7 @@ class ZscommentsPlugin extends Plugin
 
   private function normalizeCommentRoute($path)
   {
-    $path = trim((string) $path);
+    $path = trim((string)$path);
 
     if ($path === '') {
       return '/';
@@ -254,7 +256,7 @@ class ZscommentsPlugin extends Plugin
       return;
     }
 
-    $formName = trim((string) ($form['name'] ?? 'zscomments')) ?: 'zscomments';
+    $formName = trim((string)($form['name'] ?? 'zscomments')) ?: 'zscomments';
     $form['name'] = $formName;
 
     $page->addForms([$formName => $form], true);
@@ -288,7 +290,7 @@ class ZscommentsPlugin extends Plugin
 
   private function getCommentTimezone()
   {
-    $timezone = (string) $this->config->get('system.timezone');
+    $timezone = (string)$this->config->get('system.timezone');
 
     if ($timezone !== '') {
       try {
@@ -312,17 +314,17 @@ class ZscommentsPlugin extends Plugin
     $relativePath = preg_replace('/\.yaml$/i', '', $relativePath);
     $lang = null;
 
-    foreach ((array) $this->config->get('system.languages.supported', []) as $supportedLanguage) {
-      $prefix = trim((string) $supportedLanguage, '/') . '/';
+    foreach ((array)$this->config->get('system.languages.supported', []) as $supportedLanguage) {
+      $prefix = trim((string)$supportedLanguage, '/') . '/';
 
       if (Utils::startsWith($relativePath, $prefix)) {
-        $lang = (string) $supportedLanguage;
+        $lang = (string)$supportedLanguage;
         $relativePath = substr($relativePath, strlen($prefix));
         break;
       }
     }
 
-    $route = '/' . ltrim((string) $relativePath, '/');
+    $route = '/' . ltrim((string)$relativePath, '/');
 
     return [
       'lang' => $lang,
@@ -336,10 +338,10 @@ class ZscommentsPlugin extends Plugin
       'id' => Utils::uniqueId(),
       'parent_id' => $parentId,
       'is_pending' => $isPending,
-      'text' => $this->sanitizeUtf8((string) $text),
+      'text' => $this->sanitizeUtf8((string)$text),
       'date' => $this->getCurrentCommentDate(),
-      'author' => $this->sanitizeUtf8((string) $author),
-      'email' => $this->sanitizeUtf8((string) $email),
+      'author' => $this->sanitizeUtf8((string)$author),
+      'email' => $this->sanitizeUtf8((string)$email),
       'ip' => $this->config->get('plugins.zscomments.collect_ip', false) ? Uri::ip() : '-',
     ];
   }
@@ -402,8 +404,8 @@ class ZscommentsPlugin extends Plugin
           if ($quickreply !== '') {
             $data['comments'][] = $this->buildCommentData(
               $quickreply,
-              trim((string) $this->config->get('plugins.zscomments.quickreply_name', '')),
-              trim((string) $this->config->get('plugins.zscomments.quickreply_email', '')),
+              trim((string)$this->config->get('plugins.zscomments.quickreply_name', '')),
+              trim((string)$this->config->get('plugins.zscomments.quickreply_email', '')),
               $id,
               0
             );
@@ -433,7 +435,7 @@ class ZscommentsPlugin extends Plugin
   public function getAdminPageData($page = 0, array $filters = [])
   {
     $normalizedFilters = $this->normalizeAdminCommentFilters($filters);
-    $comments = $this->getLastComments((int) $page, $normalizedFilters);
+    $comments = $this->getLastComments((int)$page, $normalizedFilters);
 
     return [
       'comments' => $comments->comments,
@@ -494,13 +496,14 @@ class ZscommentsPlugin extends Plugin
   }
 
   /**
-     * Determine if the plugin should be enabled based on the enable_on_routes and disable_on_routes config options
-     */
-  private function calculateEnable() {
+   * Determine if the plugin should be enabled based on the enable_on_routes and disable_on_routes config options
+   */
+  private function calculateEnable()
+  {
     $uri = $this->grav['uri'];
 
-    $disable_on_routes = (array) $this->config->get('plugins.zscomments.disable_on_routes');
-    $enable_on_routes = (array) $this->config->get('plugins.zscomments.enable_on_routes');
+    $disable_on_routes = (array)$this->config->get('plugins.zscomments.disable_on_routes');
+    $enable_on_routes = (array)$this->config->get('plugins.zscomments.enable_on_routes');
 
     $path = $uri->path();
 
@@ -508,7 +511,7 @@ class ZscommentsPlugin extends Plugin
       if (in_array($path, $enable_on_routes)) {
         $this->enable = true;
       } else {
-        foreach($enable_on_routes as $route) {
+        foreach ($enable_on_routes as $route) {
           if (Utils::startsWith($path, $route)) {
             $this->enable = true;
             break;
@@ -519,10 +522,10 @@ class ZscommentsPlugin extends Plugin
   }
 
   /**
-     * Handle form processing instructions.
-     *
-     * @param Event $event
-     */
+   * Handle form processing instructions.
+   *
+   * @param Event $event
+   */
   public function onFormProcessed(Event $event)
   {
     $form = $event['form'];
@@ -533,23 +536,36 @@ class ZscommentsPlugin extends Plugin
       return;
     }
 
+    // Honeypot protection - cancel the entire form process (email, addComment, etc.)
+    // as soon as the honeypot field is filled in, whatever process step is currently firing.
+    $honeypotFieldName = $this->config->get('plugins.zscomments.honeypot_field_name');
+    if ($honeypotFieldName) {
+      $post = isset($_POST['data']) ? $_POST['data'] : [];
+      $honeypot = $post[$honeypotFieldName] ?? '';
+
+      if ($honeypot !== '') {
+        $event->stopPropagation();
+        return;
+      }
+    }
+
     switch ($action) {
       case 'addComment':
         $post = isset($_POST['data']) ? $_POST['data'] : [];
 
         // Get path - fallback to current URI if not provided or contains Twig syntax
-        $pathRaw = trim((string) ($post['path'] ?? ''));
+        $pathRaw = trim((string)($post['path'] ?? ''));
         if (empty($pathRaw) || str_contains($pathRaw, '{{') || str_contains($pathRaw, '{%')) {
           $pathRaw = $this->grav['uri']->path();
         }
         $path = $this->normalizeCommentRoute($pathRaw);
 
-        $lang = trim(strip_tags(urldecode((string) ($post['lang'] ?? ''))));
-        $text = trim(strip_tags(urldecode((string) ($post['text'] ?? ''))));
-        $parent_id = trim(strip_tags(urldecode((string) ($post['parent_id'] ?? ''))));
-        $name = trim(strip_tags(urldecode((string) ($post['name'] ?? ''))));
-        $email = trim(urldecode((string) ($post['email'] ?? '')));
-        $title = trim(strip_tags(urldecode((string) ($post['title'] ?? ''))));
+        $lang = trim(strip_tags(urldecode((string)($post['lang'] ?? ''))));
+        $text = trim(strip_tags(urldecode((string)($post['text'] ?? ''))));
+        $parent_id = trim(strip_tags(urldecode((string)($post['parent_id'] ?? ''))));
+        $name = trim(strip_tags(urldecode((string)($post['name'] ?? ''))));
+        $email = trim(urldecode((string)($post['email'] ?? '')));
+        $title = trim(strip_tags(urldecode((string)($post['title'] ?? ''))));
 
         if (isset($this->grav['user'])) {
           $user = $this->grav['user'];
@@ -561,7 +577,7 @@ class ZscommentsPlugin extends Plugin
 
         /** @var Language $language */
         $language = $this->grav['language'];
-        
+
         // If lang is empty or contains Twig syntax, get it from language service
         if (empty($lang) || str_contains($lang, '{{') || str_contains($lang, '{%')) {
           $lang = $language->getLanguage();
@@ -577,7 +593,7 @@ class ZscommentsPlugin extends Plugin
 
         $filename = $this->getZscommentsFilename($path, $lang);
 
-        $require_approval = (bool) $this->config->get('plugins.zscomments.require_approval', true);
+        $require_approval = (bool)$this->config->get('plugins.zscomments.require_approval', true);
 
         $comment = $this->buildCommentData(
           $text,
@@ -596,11 +612,11 @@ class ZscommentsPlugin extends Plugin
             ];
           }
 
-          if (!isset($data['title']) || str_contains((string) $data['title'], '{{') || str_contains((string) $data['title'], '{%')) {
+          if (!isset($data['title']) || str_contains((string)$data['title'], '{{') || str_contains((string)$data['title'], '{%')) {
             $data['title'] = $title;
           }
 
-          if (!isset($data['lang']) || str_contains((string) $data['lang'], '{{') || str_contains((string) $data['lang'], '{%')) {
+          if (!isset($data['lang']) || str_contains((string)$data['lang'], '{{') || str_contains((string)$data['lang'], '{%')) {
             $data['lang'] = $lang;
           }
 
@@ -624,9 +640,9 @@ class ZscommentsPlugin extends Plugin
           'comment' => $comment
         ];
 
-        $to = trim((string) $this->config->get('plugins.zscomments.approval_email', 'mail@zisoft.de'));
-        $from = trim((string) $this->config->get('plugins.zscomments.approval_from', 'zisoft Grav CMS <norply@zisoft.de>'));
-        $subject = trim((string) $this->config->get('plugins.zscomments.approval_subject', 'Neuer Kommentar auf zisoft.de'));
+        $to = trim((string)$this->config->get('plugins.zscomments.approval_email', 'mail@zisoft.de'));
+        $from = trim((string)$this->config->get('plugins.zscomments.approval_from', 'zisoft Grav CMS <norply@zisoft.de>'));
+        $subject = trim((string)$this->config->get('plugins.zscomments.approval_subject', 'Neuer Kommentar auf zisoft.de'));
         $content = $this->grav['twig']->processTemplate('/partials/zscomments_email.html.twig', $vars);
 
         $message = $this->grav['Email']->message($subject, $content, 'text/html')
@@ -641,10 +657,10 @@ class ZscommentsPlugin extends Plugin
 
   private function normalizeAdminCommentFilters(array $filters = [])
   {
-    $range = isset($filters['range']) ? (string) $filters['range'] : '7d';
+    $range = isset($filters['range']) ? (string)$filters['range'] : '7d';
     $pendingOnly = !empty($filters['pending_only']);
-    $route = trim((string) ($filters['route'] ?? ''));
-    $search = trim((string) ($filters['search'] ?? ''));
+    $route = trim((string)($filters['route'] ?? ''));
+    $search = trim((string)($filters['search'] ?? ''));
 
     if (!in_array($range, ['7d', '30d', 'all'], true)) {
       $range = '7d';
@@ -665,7 +681,7 @@ class ZscommentsPlugin extends Plugin
 
   private function commentMatchesAdminFilters(array $comment, array $filters)
   {
-    if (!empty($filters['pending_only']) && (int) ($comment['is_pending'] ?? 0) !== 1) {
+    if (!empty($filters['pending_only']) && (int)($comment['is_pending'] ?? 0) !== 1) {
       return false;
     }
 
@@ -674,7 +690,7 @@ class ZscommentsPlugin extends Plugin
     }
 
     if ($filters['route'] !== '') {
-      $routeHaystack = trim(((string) ($comment['url'] ?? '')) . ' ' . ((string) ($comment['pageTitle'] ?? '')) . ' ' . ((string) ($comment['lang'] ?? '')));
+      $routeHaystack = trim(((string)($comment['url'] ?? '')) . ' ' . ((string)($comment['pageTitle'] ?? '')) . ' ' . ((string)($comment['lang'] ?? '')));
 
       if (stripos($routeHaystack, $filters['route']) === false) {
         return false;
@@ -682,7 +698,7 @@ class ZscommentsPlugin extends Plugin
     }
 
     if ($filters['search'] !== '') {
-      $searchHaystack = trim(((string) ($comment['text'] ?? '')) . ' ' . ((string) ($comment['author'] ?? '')));
+      $searchHaystack = trim(((string)($comment['text'] ?? '')) . ' ' . ((string)($comment['author'] ?? '')));
 
       if (stripos($searchHaystack, $filters['search']) === false) {
         return false;
@@ -694,14 +710,14 @@ class ZscommentsPlugin extends Plugin
 
   private function getCommentFileLockTimeout()
   {
-    $timeout = (float) $this->config->get('plugins.zscomments.lock_timeout', 5.0);
+    $timeout = (float)$this->config->get('plugins.zscomments.lock_timeout', 5.0);
 
     return $timeout > 0 ? $timeout : 5.0;
   }
 
   private function getCommentFileLockRetryDelay()
   {
-    $retryDelay = (int) $this->config->get('plugins.zscomments.lock_retry_delay', 100000);
+    $retryDelay = (int)$this->config->get('plugins.zscomments.lock_retry_delay', 100000);
 
     return $retryDelay > 0 ? $retryDelay : 100000;
   }
@@ -709,7 +725,7 @@ class ZscommentsPlugin extends Plugin
   private function getCommentFileLockStaleTimeout()
   {
     $default = max($this->getCommentFileLockTimeout() * 4, 30.0);
-    $staleTimeout = (float) $this->config->get('plugins.zscomments.lock_stale_timeout', $default);
+    $staleTimeout = (float)$this->config->get('plugins.zscomments.lock_stale_timeout', $default);
 
     return $staleTimeout > 0 ? $staleTimeout : $default;
   }
@@ -732,7 +748,8 @@ class ZscommentsPlugin extends Plugin
     clearstatcache(true, $lockPath);
   }
 
-  private function withCommentFileLock($filename, $lockType, callable $callback) {
+  private function withCommentFileLock($filename, $lockType, callable $callback)
+  {
     $lockPath = $filename . '.lock';
     $lockDirectory = dirname($lockPath);
     $timeout = $this->getCommentFileLockTimeout();
@@ -775,7 +792,8 @@ class ZscommentsPlugin extends Plugin
     }
   }
 
-  private function readYamlFileWithLock($filename) {
+  private function readYamlFileWithLock($filename)
+  {
     return $this->withCommentFileLock($filename, LOCK_SH, function () use ($filename) {
       clearstatcache(true, $filename);
 
@@ -793,7 +811,8 @@ class ZscommentsPlugin extends Plugin
     });
   }
 
-  private function updateYamlFileWithLock($filename, callable $callback) {
+  private function updateYamlFileWithLock($filename, callable $callback)
+  {
     return $this->withCommentFileLock($filename, LOCK_EX, function () use ($filename, $callback) {
       $path = dirname($filename);
 
@@ -838,7 +857,8 @@ class ZscommentsPlugin extends Plugin
     });
   }
 
-  private function getFilesOrderedByModifiedDate($path = '', $minModifiedTimestamp = null) {
+  private function getFilesOrderedByModifiedDate($path = '', $minModifiedTimestamp = null)
+  {
     $files = [];
 
     if (!$path) {
@@ -849,9 +869,9 @@ class ZscommentsPlugin extends Plugin
       Folder::mkdir($path);
     }
 
-    $dirItr     = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
-    $filterItr  = new RecursiveFolderFilterIterator($dirItr);
-    $itr        = new \RecursiveIteratorIterator($filterItr, \RecursiveIteratorIterator::SELF_FIRST);
+    $dirItr = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
+    $filterItr = new RecursiveFolderFilterIterator($dirItr);
+    $itr = new \RecursiveIteratorIterator($filterItr, \RecursiveIteratorIterator::SELF_FIRST);
 
     $itrItr = new \RecursiveIteratorIterator($dirItr, \RecursiveIteratorIterator::SELF_FIRST);
     $filesItr = new \RegexIterator($itrItr, '/^.+\.yaml$/i');
@@ -889,14 +909,15 @@ class ZscommentsPlugin extends Plugin
     }
 
     // Order files by last modified date
-    usort($files, function($a, $b) {
+    usort($files, function ($a, $b) {
       return $b->modifiedDate <=> $a->modifiedDate;
     });
 
     return $files;
   }
 
-  private function getLastComments($page = 0, array $filters = []) {
+  private function getLastComments($page = 0, array $filters = [])
+  {
     $number = 30;
     $filters = $this->normalizeAdminCommentFilters($filters);
 
@@ -904,7 +925,7 @@ class ZscommentsPlugin extends Plugin
     $files = $this->getFilesOrderedByModifiedDate('', $filters['min_timestamp']);
     $comments = [];
 
-    foreach($files as $file) {
+    foreach ($files as $file) {
       $data = $file->data;
 
       if (!is_array($data) || !isset($data['comments']) || !is_array($data['comments'])) {
@@ -913,7 +934,7 @@ class ZscommentsPlugin extends Plugin
 
       for ($i = 0; $i < count($data['comments']); $i++) {
         $comment = $data['comments'][$i];
-        $dateTime = \DateTime::createFromFormat('Y-m-d H:i', (string) ($comment['date'] ?? ''), $this->getCommentTimezone());
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i', (string)($comment['date'] ?? ''), $this->getCommentTimezone());
 
         $comment['pageTitle'] = $data['title'] ?? $file->route;
         $comment['filePath'] = $file->filePath;
@@ -928,7 +949,7 @@ class ZscommentsPlugin extends Plugin
     }
 
     // Order comments by date
-    usort($comments, function($a, $b) {
+    usort($comments, function ($a, $b) {
       return $b['timestamp'] <=> $a['timestamp'];
     });
 
@@ -945,9 +966,10 @@ class ZscommentsPlugin extends Plugin
   }
 
   /**
-     * Return the comments associated to the current route
-     */
-  private function fetchZscomments() {
+   * Return the comments associated to the current route
+   */
+  private function fetchZscomments()
+  {
     $cache = $this->grav['cache'];
     //search in cache
     if ($zscomments = $cache->fetch($this->zscomments_cache_id)) {
@@ -965,20 +987,21 @@ class ZscommentsPlugin extends Plugin
   }
 
   /**
-     * Return the latest commented pages
-     */
-  private function fetchPages(array $filters = []) {
+   * Return the latest commented pages
+   */
+  private function fetchPages(array $filters = [])
+  {
     $filters = $this->normalizeAdminCommentFilters($filters);
     $files = [];
     $files = $this->getFilesOrderedByModifiedDate('', $filters['min_timestamp']);
 
     $pages = [];
 
-    foreach($files as $file) {
+    foreach ($files as $file) {
       $matchingComments = [];
 
-      foreach ((array) ($file->data['comments'] ?? []) as $comment) {
-        $dateTime = \DateTime::createFromFormat('Y-m-d H:i', (string) ($comment['date'] ?? ''), $this->getCommentTimezone());
+      foreach ((array)($file->data['comments'] ?? []) as $comment) {
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i', (string)($comment['date'] ?? ''), $this->getCommentTimezone());
 
         $comment['timestamp'] = $dateTime instanceof \DateTimeInterface ? $dateTime->getTimestamp() : 0;
         $comment['url'] = $file->route;
@@ -994,7 +1017,7 @@ class ZscommentsPlugin extends Plugin
         continue;
       }
 
-      usort($matchingComments, function($a, $b) {
+      usort($matchingComments, function ($a, $b) {
         return $b['timestamp'] <=> $a['timestamp'];
       });
 
@@ -1012,17 +1035,18 @@ class ZscommentsPlugin extends Plugin
 
 
   /**
-     * Given a data file route, return the YAML content already parsed
-     */
-  private function getDataFromFilename($fileRoute) {
+   * Given a data file route, return the YAML content already parsed
+   */
+  private function getDataFromFilename($fileRoute)
+  {
 
     //Single item details
     return $this->readYamlFileWithLock(DATA_DIR . 'zscomments/' . $fileRoute);
   }
 
   /**
-     * Add templates directory to twig lookup paths.
-     */
+   * Add templates directory to twig lookup paths.
+   */
   public function onTwigTemplatePaths()
   {
     $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';

@@ -36,6 +36,8 @@ en:
         TIMEOUT_HELP: 'Maximum time in seconds to wait for a file lock.'
         RETRY_DELAY_HELP: 'Delay between lock retries in microseconds.'
         STALE_TIMEOUT_HELP: 'Remove stale lock directories after this many seconds.'
+        HONEYPOT_FIELD_NAME: 'Honeypot field name'
+        HONEYPOT_FIELD_NAME_HELP: 'Name of the honeypot field to use for spam protection. Leave empty to disable.'
       ADMIN:
         REFRESH: Refresh
         SUMMARY_LOADED: '%retrieved% of %total% comments loaded'
@@ -110,6 +112,8 @@ de:
         TIMEOUT_HELP: 'Maximale Wartezeit in Sekunden auf einen Dateilock.'
         RETRY_DELAY_HELP: 'Wartezeit zwischen Lock-Versuchen in Mikrosekunden.'
         STALE_TIMEOUT_HELP: 'Verwaiste Lock-Verzeichnisse nach dieser Anzahl Sekunden entfernen.'
+        HONEYPOT_FIELD_NAME: 'Name des Honeypot-Feldes'
+        HONEYPOT_FIELD_NAME_HELP: 'Name des Honeypot-Feldes zum Schutz vor Spam. Leer lassen, um die Funktion zu deaktivieren.'
       ADMIN:
         REFRESH: Aktualisieren
         SUMMARY_LOADED: '%retrieved% von %total% Kommentaren geladen'
@@ -220,6 +224,8 @@ es:
         COMMENT_ORDER: 'Orden de comentarios'
         COMMENT_ORDER_ASC: 'Más antiguos primero'
         COMMENT_ORDER_DESC: 'Más recientes primero'
+        HONEYPOT_FIELD_NAME: 'Nombre del campo honeypot'
+        HONEYPOT_FIELD_NAME_HELP: 'Nombre del campo honeypot utilizado para la protección contra spam. Déjelo vacío para desactivarlo.'
 fr:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -294,6 +300,8 @@ fr:
         COMMENT_ORDER: 'Ordre des commentaires'
         COMMENT_ORDER_ASC: 'Les plus anciens d’abord'
         COMMENT_ORDER_DESC: 'Les plus récents d’abord'
+        HONEYPOT_FIELD_NAME: 'Nom du champ honeypot'
+        HONEYPOT_FIELD_NAME_HELP: 'Nom du champ honeypot utilisé pour la protection contre le spam. Laissez vide pour désactiver.'
 hr:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -368,6 +376,8 @@ hr:
         COMMENT_ORDER: 'Redoslijed komentara'
         COMMENT_ORDER_ASC: 'Najstariji prvo'
         COMMENT_ORDER_DESC: 'Najnoviji prvo'
+        HONEYPOT_FIELD_NAME: 'Naziv honeypot polja'
+        HONEYPOT_FIELD_NAME_HELP: 'Naziv honeypot polja za zaštitu od neželjene pošte. Ostavite prazno za onemogućavanje.'
 it:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -442,6 +452,8 @@ it:
         COMMENT_ORDER: 'Ordine dei commenti'
         COMMENT_ORDER_ASC: 'Prima i più vecchi'
         COMMENT_ORDER_DESC: 'Prima i più recenti'
+        HONEYPOT_FIELD_NAME: 'Nome del campo honeypot'
+        HONEYPOT_FIELD_NAME_HELP: 'Nome del campo honeypot utilizzato per la protezione anti-spam. Lasciare vuoto per disabilitare.'
 ja:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -516,6 +528,8 @@ ja:
         COMMENT_ORDER: コメントの並び順
         COMMENT_ORDER_ASC: 古い順
         COMMENT_ORDER_DESC: 新しい順
+        HONEYPOT_FIELD_NAME: ハニーポットフィールド名
+        HONEYPOT_FIELD_NAME_HELP: スパム対策に使用するハニーポットフィールドの名前です。無効にするには空欄のままにしてください。
 nl:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -590,6 +604,8 @@ nl:
         COMMENT_ORDER: 'Volgorde van reacties'
         COMMENT_ORDER_ASC: 'Oudste eerst'
         COMMENT_ORDER_DESC: 'Nieuwste eerst'
+        HONEYPOT_FIELD_NAME: 'Naam van het honeypot-veld'
+        HONEYPOT_FIELD_NAME_HELP: 'Naam van het honeypot-veld voor spambescherming. Laat leeg om uit te schakelen.'
 pl:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -664,6 +680,8 @@ pl:
         COMMENT_ORDER: 'Kolejność komentarzy'
         COMMENT_ORDER_ASC: 'Najstarsze najpierw'
         COMMENT_ORDER_DESC: 'Najnowsze najpierw'
+        HONEYPOT_FIELD_NAME: 'Nazwa pola honeypot'
+        HONEYPOT_FIELD_NAME_HELP: 'Nazwa pola honeypot używanego do ochrony przed spamem. Pozostaw puste, aby wyłączyć.'
 ru:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -738,6 +756,8 @@ ru:
         COMMENT_ORDER: 'Порядок комментариев'
         COMMENT_ORDER_ASC: 'Сначала старые'
         COMMENT_ORDER_DESC: 'Сначала новые'
+        HONEYPOT_FIELD_NAME: 'Имя honeypot-поля'
+        HONEYPOT_FIELD_NAME_HELP: 'Имя honeypot-поля для защиты от спама. Оставьте пустым, чтобы отключить.'
 pt-br:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -812,6 +832,8 @@ pt-br:
         COMMENT_ORDER: 'Ordem dos comentários'
         COMMENT_ORDER_ASC: 'Mais antigos primeiro'
         COMMENT_ORDER_DESC: 'Mais recentes primeiro'
+        HONEYPOT_FIELD_NAME: 'Nome do campo honeypot'
+        HONEYPOT_FIELD_NAME_HELP: 'Nome do campo honeypot usado para proteção contra spam. Deixe em branco para desativar.'
 ro:
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -886,6 +908,8 @@ ro:
         COMMENT_ORDER: 'Ordinea comentariilor'
         COMMENT_ORDER_ASC: 'Cele mai vechi primele'
         COMMENT_ORDER_DESC: 'Cele mai noi primele'
+        HONEYPOT_FIELD_NAME: 'Numele câmpului honeypot'
+        HONEYPOT_FIELD_NAME_HELP: 'Numele câmpului honeypot utilizat pentru protecția împotriva spamului. Lăsați gol pentru a dezactiva.'
 'no':
   ICU:
     PLUGIN_ZSCOMMENTS:
@@ -960,3 +984,5 @@ ro:
         COMMENT_ORDER: 'Rekkefølge på kommentarer'
         COMMENT_ORDER_ASC: 'Eldste først'
         COMMENT_ORDER_DESC: 'Nyeste først'
+        HONEYPOT_FIELD_NAME: 'Navn på honeypot-felt'
+        HONEYPOT_FIELD_NAME_HELP: 'Navn på honeypot-feltet som brukes til spambeskyttelse. La stå tomt for å deaktivere.'
