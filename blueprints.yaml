@@ -76,6 +76,11 @@ form:
       help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.HONEYPOT_FIELD_NAME_HELP
       placeholder: 'e.g. hp_name'
 
+    blocked_scripts:
+      type: text
+      label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.BLOCKED_SCRIPTS
+      help: ICU.PLUGIN_ZSCOMMENTS.CONFIG.BLOCKED_SCRIPTS_HELP
+
     approval_email:
       type: email
       label: ICU.PLUGIN_ZSCOMMENTS.CONFIG.APPROVAL_EMAIL

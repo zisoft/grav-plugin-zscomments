@@ -549,6 +549,29 @@ class ZscommentsPlugin extends Plugin
       }
     }
 
+    // Blocked scripts protection - cancel the entire form process if the comment text or
+    // name matches the admin-configured regular expression.
+    $blockedScripts = trim((string)$this->config->get('plugins.zscomments.blocked_scripts', ''));
+    if ($blockedScripts !== '') {
+      $post = isset($_POST['data']) ? $_POST['data'] : [];
+      $content = ((string)($post['text'] ?? '')) . ' ' . ((string)($post['name'] ?? ''));
+
+      // Use a control character as delimiter so the admin-supplied pattern can't break out
+      // of it by containing '/' or ']', and validate it before trusting the match result -
+      // an invalid pattern must fail open (skip the filter), not silently match everything.
+      $pattern = "\x01" . $blockedScripts . "\x01u";
+      $matched = @preg_match($pattern, $content);
+
+      var_dump($matched);
+
+      if ($matched === false) {
+        $this->grav['log']->warning('zscomments: invalid "blocked_scripts" regex, comment filter skipped: ' . $blockedScripts);
+      } elseif ($matched === 1) {
+        $event->stopPropagation();
+        return;
+      }
+    }
+
     switch ($action) {
       case 'addComment':
         $post = isset($_POST['data']) ? $_POST['data'] : [];
