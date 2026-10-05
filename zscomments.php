@@ -75,7 +75,7 @@ class ZscommentsPlugin extends Plugin
       }
     }
 
-    $event->header = $header;
+    $event['header'] = $header;
   }
 
   public function onTwigSiteVariables()
