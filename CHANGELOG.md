@@ -1,3 +1,8 @@
+# v1.3.1
+## 05/10/2026
+1. [](#bugfix)
+    * **Fix PHP 8.2 dynamic property deprecation warning**
+
 # v1.3.0
 ## 07/14/2026
 1. [](#new)
