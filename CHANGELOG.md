@@ -1,5 +1,12 @@
+# v1.3.2
+## 11/18/2026
+1. [](#bugfix)
+    * **Added an `id` attribute to the comment form.** Captcha scripts such as Cloudflare Turnstile need it to locate and submit the form. The value is the Grav form object's `id` or `name`, falling back to the configured form's `id`, then its `name`.
+1. [](#improved)
+    * **Documented Cloudflare Turnstile as an alternative to reCAPTCHA** in the README.
+
 # v1.3.1
-## 05/10/2026
+## 10/05/2026
 1. [](#bugfix)
     * **Fix PHP 8.2 dynamic property deprecation warning**
 
