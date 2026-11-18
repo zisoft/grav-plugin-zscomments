@@ -8,6 +8,7 @@
         <h3>{{ 'ICU.PLUGIN_ZSCOMMENTS.ADD_COMMENT'|t }}</h3>
 
         <form name="{{ zscomments_form.name }}"
+              id="{{ (form.id ?: form.name ?: zscomments_form.id ?: zscomments_form.name)|e }}"
               action="{{ zscomments_form.action ?  base_url ~ zscomments_form.action : page.url }}"
               method="{{ zscomments_form.method|upper|default('POST') }}">
 
