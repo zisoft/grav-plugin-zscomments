@@ -22,7 +22,7 @@ It started as a fork of the original Grav Comments plugin, but has been adapted 
 - honeypot field and regex-based spam filtering
 - YAML storage in `user/data/zscomments`
 - lock-directory based concurrent file access without relying on `flock()`
-- optional reCAPTCHA integration via Grav Form
+- optional reCAPTCHA or Cloudflare Turnstile integration via Grav Form
 
 ## Requirements
 
@@ -242,6 +242,12 @@ To enable it:
 2. uncomment the captcha field in the form definition
 3. uncomment the captcha process block
 4. add your own reCAPTCHA site key and secret
+
+### Cloudflare Turnstile
+
+Cloudflare Turnstile can be used instead of reCAPTCHA, through the Grav Form plugin's captcha support. Add a Turnstile field and its matching process action to the form definition in `user/config/plugins/zscomments.yaml`, and configure your Turnstile site key and secret as described in the Grav Form documentation.
+
+The `<form>` element rendered by the frontend partial carries an `id` attribute (the Grav form object's `id` or `name`, falling back to the configured form's `id`, then its `name`), which captcha scripts such as Turnstile rely on to locate and submit the form.
 
 ## Known limitations
 
