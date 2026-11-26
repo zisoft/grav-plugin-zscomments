@@ -598,6 +598,12 @@ class GravZscommentsAdminPage extends HTMLElement {
           font: inherit;
           resize: vertical;
           background: white;
+          color: inherit;
+          color-scheme: light;
+        }
+        textarea.quickreply::placeholder {
+          color: hsl(240 3.8% 46.1%);
+          opacity: 1;
         }
         .center {
           text-align: center;
