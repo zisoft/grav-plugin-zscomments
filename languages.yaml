@@ -13,6 +13,8 @@ en:
       EMAIL_NEW_COMMENT_SUBJECT: '[New Comment] from {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Thank you for writing your comment!'
       QUICK_REPLY_LABEL: 'Quick reply'
+      EMAIL_MODERATE: 'Moderate in the admin'
+      EMAIL_MODERATE_IN_ADMIN: 'Approve or delete this comment from the ZSComments page of the admin.'
       REPLY: Reply
       CONFIG:
         REQUIRE_APPROVAL: 'Require approval'
@@ -91,6 +93,8 @@ de:
       EMAIL_NEW_COMMENT_SUBJECT: '[Neuer Kommentar] von {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Vielen Dank, der Kommentar wartet auf Freigabe'
       QUICK_REPLY_LABEL: Schnell-Antwort
+      EMAIL_MODERATE: 'Im Admin moderieren'
+      EMAIL_MODERATE_IN_ADMIN: 'Diesen Kommentar auf der ZSComments-Seite im Admin freigeben oder löschen.'
       REPLY: Antworten
       CONFIG:
         REQUIRE_APPROVAL: 'Freigabe erforderlich'
@@ -169,6 +173,8 @@ es:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nuevo comentario] de {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Gracias por escribir su comentario!'
       QUICK_REPLY_LABEL: 'Respuesta rápida'
+      EMAIL_MODERATE: 'Moderar en el panel'
+      EMAIL_MODERATE_IN_ADMIN: 'Aprueba o elimina este comentario desde la página ZSComments del panel de administración.'
       REPLY: Responder
       ADMIN:
         REFRESH: Actualizar
@@ -247,6 +253,8 @@ fr:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nouveau commentaire] de {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: "Merci d'avoir rédigé votre commentaire !"
       QUICK_REPLY_LABEL: 'Réponse rapide'
+      EMAIL_MODERATE: 'Modérer dans l''admin'
+      EMAIL_MODERATE_IN_ADMIN: 'Approuvez ou supprimez ce commentaire depuis la page ZSComments de l''admin.'
       REPLY: Répondre
       ADMIN:
         REFRESH: Actualiser
@@ -325,6 +333,8 @@ hr:
       EMAIL_NEW_COMMENT_SUBJECT: '[Novi komentar] od {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Hvala Vam što ste napisali svoj komentar!'
       QUICK_REPLY_LABEL: 'Brzi odgovor'
+      EMAIL_MODERATE: 'Moderiraj u administraciji'
+      EMAIL_MODERATE_IN_ADMIN: 'Odobrite ili izbrišite ovaj komentar na stranici ZSComments u administraciji.'
       REPLY: Odgovori
       ADMIN:
         REFRESH: Osvježi
@@ -403,6 +413,8 @@ it:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nuovo commento] da {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Grazie per il tuo commento!'
       QUICK_REPLY_LABEL: 'Risposta rapida'
+      EMAIL_MODERATE: 'Modera nell''amministrazione'
+      EMAIL_MODERATE_IN_ADMIN: 'Approva o elimina questo commento dalla pagina ZSComments dell''amministrazione.'
       REPLY: Rispondi
       ADMIN:
         REFRESH: Aggiorna
@@ -482,6 +494,8 @@ ja:
       EMAIL_NEW_COMMENT_SUBJECT: '[新しいコメント] {{ form.value.name|e }}から'
       THANK_YOU_MESSAGE: コメントありがとうございます！
       QUICK_REPLY_LABEL: クイック返信
+      EMAIL_MODERATE: '管理画面でモデレートする'
+      EMAIL_MODERATE_IN_ADMIN: '管理画面の ZSComments ページでこのコメントを承認または削除してください。'
       REPLY: 返信
       ADMIN:
         REFRESH: 更新
@@ -561,6 +575,8 @@ nl:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nieuwe reactie] van {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Bedankt voor je reactie!'
       QUICK_REPLY_LABEL: 'Snel antwoord'
+      EMAIL_MODERATE: 'Modereren in de beheeromgeving'
+      EMAIL_MODERATE_IN_ADMIN: 'Keur deze reactie goed of verwijder ze via de ZSComments-pagina in de beheeromgeving.'
       REPLY: Antwoorden
       ADMIN:
         REFRESH: Verversen
@@ -640,6 +656,8 @@ pl:
       EMAIL_NEW_COMMENT_SUBJECT: '[Nowy komentarz] od {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Dziękujemy za komentarz!'
       QUICK_REPLY_LABEL: 'Szybka odpowiedź'
+      EMAIL_MODERATE: 'Moderuj w panelu administracyjnym'
+      EMAIL_MODERATE_IN_ADMIN: 'Zatwierdź lub usuń ten komentarz na stronie ZSComments w panelu administracyjnym.'
       REPLY: Odpowiedz
       ADMIN:
         REFRESH: Odśwież
@@ -719,6 +737,8 @@ ru:
       EMAIL_NEW_COMMENT_SUBJECT: '[Новый комментарий] от {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Благодарим за ваш комментарий!'
       QUICK_REPLY_LABEL: 'Быстрый ответ'
+      EMAIL_MODERATE: 'Модерировать в админке'
+      EMAIL_MODERATE_IN_ADMIN: 'Одобрите или удалите этот комментарий на странице ZSComments в админке.'
       REPLY: Ответить
       ADMIN:
         REFRESH: Обновить
@@ -798,6 +818,8 @@ pt-br:
       EMAIL_NEW_COMMENT_SUBJECT: '[Novo comentário] de {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Obrigada por enviar seu comentário!'
       QUICK_REPLY_LABEL: 'Resposta rápida'
+      EMAIL_MODERATE: 'Moderar no painel'
+      EMAIL_MODERATE_IN_ADMIN: 'Aprove ou exclua este comentário na página ZSComments do painel de administração.'
       REPLY: Responder
       ADMIN:
         REFRESH: Atualizar
@@ -877,6 +899,8 @@ ro:
       EMAIL_NEW_COMMENT_SUBJECT: '[Comentariu nou] from {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Vă mulțumim pentru comentariu!'
       QUICK_REPLY_LABEL: 'Răspuns rapid'
+      EMAIL_MODERATE: 'Moderează în administrare'
+      EMAIL_MODERATE_IN_ADMIN: 'Aprobă sau șterge acest comentariu din pagina ZSComments a administrării.'
       REPLY: Răspunde
       ADMIN:
         REFRESH: Actualizați
@@ -956,6 +980,8 @@ ro:
       EMAIL_NEW_COMMENT_SUBJECT: '[Ny kommentar] fra {{ form.value.name|e }}'
       THANK_YOU_MESSAGE: 'Takk for din kommentar!'
       QUICK_REPLY_LABEL: Hurtigsvar
+      EMAIL_MODERATE: 'Moderer i administrasjonen'
+      EMAIL_MODERATE_IN_ADMIN: 'Godkjenn eller slett denne kommentaren fra ZSComments-siden i administrasjonen.'
       REPLY: Svar
       ADMIN:
         REFRESH: Oppdater

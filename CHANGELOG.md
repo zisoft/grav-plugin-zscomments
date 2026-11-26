@@ -1,3 +1,14 @@
+# v1.4.0
+## Unreleased
+1. [](#improved)
+    * **Moderation emails now link to the admin2 moderation page** instead of embedding approve/delete forms (new translation keys `EMAIL_MODERATE` and `EMAIL_MODERATE_IN_ADMIN`).
+2. [](#bugfix)
+    * **Security: removed the unauthenticated `/zscomments-approve` and `/zscomments-delete` routes.** Anyone knowing a published comment id (it is in the page HTML) could delete it, or approve it with a `quickreply` posted under the site owner's name. They also redirected to the unvalidated `url` parameter (open redirect). Moderation now goes through the admin2 API only (`api.super`).
+    * **Security: the comment file is no longer built from client-supplied form fields.** `data[path]` and `data[lang]` were used to build the YAML file name without rejecting `..` or unknown languages, allowing writes outside the commented page. The route and the language now come from the current request, route segments are validated and the language must be one of `system.languages.supported`. The page title is also taken from the page.
+    * **Reading comments no longer creates empty folders.** Any URL under `enable_on_routes`, including 404s and bot probes, created the folder tree of its would-be comment file. Comments are now neither read nor written for unroutable pages, and reading a missing file takes no lock and creates nothing.
+    * **Moderation actions no longer create or rewrite comment files needlessly.** Approving or deleting on a route without a comment file created the folders and a YAML file containing `null`, and an unknown comment id rewrote the file anyway. `updateCommentInFile()` now returns early when the file is missing, and `updateYamlFileWithLock()` skips the write when nothing changed.
+    * **Fixed the unreadable quick reply field in the admin2 dark theme.** The textarea forced a white background without a text color, which showed white text on white; it now uses the component's text and placeholder colors.
+
 # v1.3.2
 ## 11/18/2026
 1. [](#bugfix)

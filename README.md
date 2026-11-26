@@ -15,7 +15,7 @@ It started as a fork of the original Grav Comments plugin, but has been adapted 
 - optional moderation / approval workflow
 - admin2 moderation UI
 - quick reply while approving a comment
-- moderation email notifications with approve/delete actions
+- moderation email notifications with a link to the admin2 moderation page
 - configurable frontend comment order (`asc` / `desc`)
 - route-based enable / disable rules
 - Gravatar support
@@ -152,8 +152,8 @@ Important:
 
 - the **Email plugin** provides the actual mail transport
 - ZSComments provides the moderation-specific recipient, sender, and subject
-- moderation mails contain approve/delete actions
-- an optional quick reply can be added while approving
+- moderation mails link to the admin2 moderation page (`<admin route>/plugin/zscomments`); they contain no approve/delete action
+- approving (with an optional quick reply) and deleting require an authenticated admin2 user with the `api.super` permission
 
 Relevant ZSComments settings:
 
@@ -255,7 +255,15 @@ The `<form>` element rendered by the frontend partial carries an `id` attribute 
 - `disable_on_routes` is matched as an exact route list, while `enable_on_routes` works by prefix.
 - Public frontend output only shows approved comments.
 - There is no database backend; comments are stored in YAML files per route.
-- Moderation by email is intended for trusted recipients because approval and delete actions are triggered from moderation links/forms.
+- Moderation requires **admin2**: without it, the moderation email only tells you to moderate in the admin, and comments stay pending.
+- Comments are always stored for the route and the language of the current request. The hidden `path`, `lang` and `title` form fields are ignored, so a custom `form.action` pointing to another route is not supported.
+- Comments are only accepted and read for existing, routable pages whose route segments are made of letters, digits, `_`, `-`, `~` and inner dots.
+
+## Security
+
+- The comment file is derived on the server from the current page route and language (only languages from `system.languages.supported`); client-supplied hidden fields cannot change where a comment is written.
+- Reading comments never creates files or folders, and nothing is read or written on a 404.
+- There is no public moderation endpoint: `/zscomments-approve` and `/zscomments-delete` were removed in favour of the authenticated admin2 API.
 
 ## Migration from the original `comments` plugin
 

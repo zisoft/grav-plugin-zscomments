@@ -25,39 +25,10 @@ class ZscommentsPlugin extends Plugin
   {
     return [
       'onPluginsInitialized' => ['onPluginsInitialized', 0],
-      'onPagesInitialized' => ['onPagesInitialized', 0],
       'onApiRegisterRoutes' => ['onApiRegisterRoutes', 0],
       'onApiSidebarItems' => ['onApiSidebarItems', 0],
       'onApiPluginPageInfo' => ['onApiPluginPageInfo', 0],
     ];
-  }
-
-  public function onPagesInitialized()
-  {
-    $uri = $this->grav['uri'];
-    $path = $uri->path();
-
-    if ($path === '/zscomments-approve') {
-      $this->handleCommentActionRoute(
-        'approve',
-        $uri->query('id'),
-        $uri->query('url'),
-        $this->grav['language']->getLanguage(),
-        trim(strip_tags(urldecode((string)$uri->query('quickreply'))))
-      );
-      return;
-    }
-
-    if ($path === '/zscomments-delete') {
-      $this->handleCommentActionRoute(
-        'delete',
-        $uri->query('id'),
-        $uri->query('url'),
-        $this->grav['language']->getLanguage(),
-        ''
-      );
-      return;
-    }
   }
 
   /**
@@ -276,16 +247,70 @@ class ZscommentsPlugin extends Plugin
     $this->grav['cache']->delete($this->getZscommentsCacheId($path, $lang));
   }
 
+  /**
+   * A route is only accepted when every segment looks like a Grav slug: letters, digits,
+   * '_', '-', '~' and inner dots. This rejects '..', '.', empty segments, NUL bytes and
+   * anything a probe or a tampered request may send (e.g. '&', '[year]', '%').
+   */
+  private function isValidCommentRoute($path)
+  {
+    if ($path === '/') {
+      return true;
+    }
+
+    foreach (explode('/', ltrim($path, '/')) as $segment) {
+      if (!preg_match('/^[\p{L}\p{N}_~-][\p{L}\p{N}._~-]*$/u', $segment)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Only the site's configured languages are accepted (an empty language keeps the
+   * legacy layout of single-language sites).
+   */
+  private function isValidCommentLanguage($lang)
+  {
+    if ($lang === null || $lang === false || $lang === '') {
+      return true;
+    }
+
+    $languages = (array)$this->grav['language']->getLanguages();
+
+    return in_array((string)$lang, array_map('strval', $languages), true);
+  }
+
+  /**
+   * Return the YAML file that stores the comments of a route, or null when the route or
+   * the language is not acceptable. Every caller must treat null as "no comment file".
+   */
   private function getZscommentsFilename($path, $lang = null)
   {
     $lang = $lang !== null ? $lang : $this->grav['language']->getLanguage();
     $path = $this->normalizeCommentRoute($path);
+
+    if (!$this->isValidCommentLanguage($lang) || !$this->isValidCommentRoute($path)) {
+      return null;
+    }
 
     $filename = DATA_DIR . 'zscomments';
     $filename .= ($lang ? '/' . $lang : '');
     $filename .= $path === '/' ? '/.yaml' : $path . '.yaml';
 
     return $filename;
+  }
+
+  /**
+   * True when the current request targets an existing, routable page. On a 404, Grav keeps
+   * an unroutable placeholder page (then the error page, which is not routable either).
+   */
+  private function isCurrentPageRoutable()
+  {
+    $page = $this->grav['page'] ?? null;
+
+    return $page instanceof PageInterface && $page->routable();
   }
 
   private function getCommentTimezone()
@@ -368,6 +393,13 @@ class ZscommentsPlugin extends Plugin
   {
     $updated = false;
 
+    // Nothing to approve or delete without a comment file: return before taking the lock,
+    // which would create the parent folders, and before writing a file containing "null".
+    clearstatcache(true, $filename);
+    if (!is_file($filename)) {
+      return false;
+    }
+
     $this->updateYamlFileWithLock($filename, function ($data) use ($id, $updater, &$updated) {
       if (!is_array($data) || !isset($data['comments']) || !is_array($data['comments'])) {
         return $data;
@@ -394,6 +426,10 @@ class ZscommentsPlugin extends Plugin
     }
 
     $filename = $this->getZscommentsFilename($url, $lang);
+    if ($filename === null) {
+      return false;
+    }
+
     $updated = false;
 
     switch ($action) {
@@ -489,12 +525,6 @@ class ZscommentsPlugin extends Plugin
     ];
   }
 
-  private function handleCommentActionRoute($action, $id, $url, $lang, $quickreply = '')
-  {
-    $this->performCommentAction($action, $id, $url, $lang, $quickreply);
-    $this->grav->redirect($url ?: '/', 303);
-  }
-
   /**
    * Determine if the plugin should be enabled based on the enable_on_routes and disable_on_routes config options
    */
@@ -574,19 +604,20 @@ class ZscommentsPlugin extends Plugin
       case 'addComment':
         $post = isset($_POST['data']) ? $_POST['data'] : [];
 
-        // Get path - fallback to current URI if not provided or contains Twig syntax
-        $pathRaw = trim((string)($post['path'] ?? ''));
-        if (empty($pathRaw) || str_contains($pathRaw, '{{') || str_contains($pathRaw, '{%')) {
-          $pathRaw = $this->grav['uri']->path();
+        // Never store a comment for a request that does not target an existing page.
+        if (!$this->isCurrentPageRoutable()) {
+          break;
         }
-        $path = $this->normalizeCommentRoute($pathRaw);
 
-        $lang = trim(strip_tags(urldecode((string)($post['lang'] ?? ''))));
+        // The comment file is derived from the current request only, exactly like
+        // fetchZscomments() does when reading. The hidden "path", "lang" and "title" form
+        // fields are ignored: they are client-controlled and could point outside the page.
+        $path = $this->normalizeCommentRoute($this->grav['uri']->path());
+
         $text = trim(strip_tags(urldecode((string)($post['text'] ?? ''))));
         $parent_id = trim(strip_tags(urldecode((string)($post['parent_id'] ?? ''))));
         $name = trim(strip_tags(urldecode((string)($post['name'] ?? ''))));
         $email = trim(urldecode((string)($post['email'] ?? '')));
-        $title = trim(strip_tags(urldecode((string)($post['title'] ?? ''))));
 
         if (isset($this->grav['user'])) {
           $user = $this->grav['user'];
@@ -598,21 +629,13 @@ class ZscommentsPlugin extends Plugin
 
         /** @var Language $language */
         $language = $this->grav['language'];
-
-        // If lang is empty or contains Twig syntax, get it from language service
-        if (empty($lang) || str_contains($lang, '{{') || str_contains($lang, '{%')) {
           $lang = $language->getLanguage();
-        }
-
-        // If title is empty or contains Twig syntax, get it from the current page
-        if (empty($title) || str_contains($title, '{{') || str_contains($title, '{%')) {
-          $currentPage = $this->grav['page'];
-          if ($currentPage instanceof PageInterface) {
-            $title = $currentPage->title();
-          }
-        }
+        $title = (string)$this->grav['page']->title();
 
         $filename = $this->getZscommentsFilename($path, $lang);
+        if ($filename === null) {
+          break;
+        }
 
         $require_approval = (bool)$this->config->get('plugins.zscomments.require_approval', true);
 
@@ -658,7 +681,8 @@ class ZscommentsPlugin extends Plugin
         $vars = [
           'base_uri' => $uri->rootUrl(true),
           'page' => $this->grav['page'],
-          'comment' => $comment
+          'comment' => $comment,
+          'moderation_url' => $this->getModerationUrl()
         ];
 
         $to = trim((string)$this->config->get('plugins.zscomments.approval_email', 'mail@zisoft.de'));
@@ -674,6 +698,20 @@ class ZscommentsPlugin extends Plugin
 
         break;
     }
+  }
+
+  /**
+   * URL of the Admin2 moderation page, or null when Admin2 is not enabled.
+   */
+  private function getModerationUrl()
+  {
+    if (!$this->config->get('plugins.admin2.enabled', false)) {
+      return null;
+    }
+
+    $adminRoute = trim((string)$this->config->get('plugins.admin2.route', '/admin'), '/');
+
+    return rtrim($this->grav['uri']->rootUrl(true), '/') . '/' . ($adminRoute !== '' ? $adminRoute . '/' : '') . 'plugin/zscomments';
   }
 
   private function normalizeAdminCommentFilters(array $filters = [])
@@ -815,6 +853,13 @@ class ZscommentsPlugin extends Plugin
 
   private function readYamlFileWithLock($filename)
   {
+    // Reading must never create anything on disk: without a comment file there is nothing
+    // to lock, and taking the lock would create the parent folders (Folder::mkdir).
+    clearstatcache(true, $filename);
+    if (!is_file($filename)) {
+      return null;
+    }
+
     return $this->withCommentFileLock($filename, LOCK_SH, function () use ($filename) {
       clearstatcache(true, $filename);
 
@@ -856,6 +901,13 @@ class ZscommentsPlugin extends Plugin
       }
 
       $updatedData = $callback($data);
+
+      // Do not rewrite the file when the callback changed nothing (e.g. unknown comment id,
+      // or the file disappeared before the lock was taken).
+      if ($updatedData === $data) {
+        return $updatedData;
+      }
+
       $tempFilename = tempnam($path, 'zscomments_');
 
       if ($tempFilename === false) {
@@ -997,8 +1049,16 @@ class ZscommentsPlugin extends Plugin
       return $zscomments;
     }
 
+    // No comments (and no cache entry) for a request that does not target an existing page.
+    if (!$this->isCurrentPageRoutable()) {
+      return null;
+    }
+
     $lang = $this->grav['language']->getLanguage();
     $filename = $this->getZscommentsFilename($this->grav['uri']->path(), $lang);
+    if ($filename === null) {
+      return null;
+    }
 
     $data = $this->readYamlFileWithLock($filename);
     $zscomments = isset($data['comments']) ? $data['comments'] : null;

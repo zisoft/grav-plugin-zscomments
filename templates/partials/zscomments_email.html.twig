@@ -48,31 +48,19 @@
           </tr>
           <tr>
             <td style="padding:0 32px 24px;">
-              <form method="GET" action="{{ base_uri }}/zscomments-approve" style="margin:0 0 16px;">
-                <input type="hidden" name="id" value="{{ comment.id }}">
-                <input type="hidden" name="url" value="{{ page_url }}">
-                <label style="display:block; font-size:13px; color:#71717a; margin-bottom:6px;">{{ 'ICU.PLUGIN_ZSCOMMENTS.QUICK_REPLY_LABEL'|t }}</label>
-                <textarea name="quickreply" rows="4" style="width:100%; box-sizing:border-box; border:1px solid #e4e4e7; border-radius:6px; padding:10px; font-family:inherit; font-size:14px; margin-bottom:12px;"></textarea>
+              {# Moderation happens in the admin (authenticated, permission "api.super"): the email
+                 carries no approve/delete action, so a leaked or forwarded email grants nothing. #}
+              {% if moderation_url %}
                 <table role="presentation" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td style="border-radius:6px; background-color:#16a34a;">
-                      <button type="submit" style="border:0; background:transparent; color:#ffffff; font-size:14px; font-weight:bold; padding:10px 20px; cursor:pointer;">{{ 'ICU.PLUGIN_ZSCOMMENTS.ADMIN.APPROVE'|t|default('Approve comment') }}</button>
+                  <td style="border-radius:6px; background-color:#2563eb;">
+                    <a href="{{ moderation_url }}" style="display:inline-block; color:#ffffff; font-size:14px; font-weight:bold; padding:10px 20px; text-decoration:none;">{{ 'ICU.PLUGIN_ZSCOMMENTS.EMAIL_MODERATE'|t }}</a>
                     </td>
                   </tr>
                 </table>
-              </form>
-
-              <form method="GET" action="{{ base_uri }}/zscomments-delete" style="margin:0;">
-                <input type="hidden" name="id" value="{{ comment.id }}">
-                <input type="hidden" name="url" value="{{ page_url }}">
-                <table role="presentation" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td style="border-radius:6px; background-color:#dc2626;">
-                      <button type="submit" style="border:0; background:transparent; color:#ffffff; font-size:14px; font-weight:bold; padding:10px 20px; cursor:pointer;">{{ 'ICU.PLUGIN_ZSCOMMENTS.ADMIN.DELETE'|t|default('Delete comment') }}</button>
-                    </td>
-                  </tr>
-                </table>
-              </form>
+              {% else %}
+              <div style="font-size:13px; color:#71717a;">{{ 'ICU.PLUGIN_ZSCOMMENTS.EMAIL_MODERATE_IN_ADMIN'|t }}</div>
+              {% endif %}
             </td>
           </tr>
         </table>
